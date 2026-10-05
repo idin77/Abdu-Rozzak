@@ -381,6 +381,7 @@ export default function App() {
   const [showOfferBanner, setShowOfferBanner] = useState(true);
   const [faqSearchQuery, setFaqSearchQuery] = useState('');
   const [copiedFaqId, setCopiedFaqId] = useState<number | null>(null);
+  const [copiedArticleLink, setCopiedArticleLink] = useState(false);
 
   const handleCopyFaq = (item: FAQItem) => {
     const textToCopy = `*FAQ Mitra Bersih 24Jam*\n\n*Tanya:* ${item.question}\n\n*Jawab:* ${item.answer}\n\nInfo selengkapnya: ${window.location.origin}#faq`;
@@ -395,6 +396,22 @@ export default function App() {
     } else {
       setCopiedFaqId(item.id);
       setTimeout(() => setCopiedFaqId(null), 2500);
+    }
+  };
+
+  const handleCopyArticleLink = (article: ArticleItem) => {
+    const url = `${window.location.origin}${window.location.pathname}#artikel-${article.id}`;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        setCopiedArticleLink(true);
+        setTimeout(() => setCopiedArticleLink(false), 2500);
+      }).catch(() => {
+        setCopiedArticleLink(true);
+        setTimeout(() => setCopiedArticleLink(false), 2500);
+      });
+    } else {
+      setCopiedArticleLink(true);
+      setTimeout(() => setCopiedArticleLink(false), 2500);
     }
   };
 
@@ -514,6 +531,156 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [lightboxImg, readingArticle, chatbotOpen]);
+
+  // Deep-link support for Articles (#artikel-1, #artikel-2, etc.)
+  useEffect(() => {
+    const checkHashForArticle = () => {
+      if (window.location.hash.startsWith('#artikel-')) {
+        const idStr = window.location.hash.replace('#artikel-', '');
+        const artId = parseInt(idStr, 10);
+        if (!isNaN(artId)) {
+          const matched = articlesData.find((a) => a.id === artId);
+          if (matched) {
+            setReadingArticle(matched);
+          }
+        }
+      }
+    };
+
+    checkHashForArticle();
+    window.addEventListener('hashchange', checkHashForArticle);
+    return () => window.removeEventListener('hashchange', checkHashForArticle);
+  }, []);
+
+  // Dynamic meta title, description, OpenGraph, Twitter, and Schema.org tags for opened articles
+  useEffect(() => {
+    const defaultTitle = 'Sedot WC Bekasi 24 Jam – Mitra Bersih';
+    const defaultDescription =
+      'Sedot WC Mitra Bersih 24Jam - Layanan sedot WC, septic tank, pelancaran saluran mampet, dan sedot limbah STP di Bekasi. Respon cepat 15 menit, armada modern, bergaransi & harga transparan. Hubungi: +62 857-1565-4183';
+    const defaultImage =
+      'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&h=630&q=85';
+    const defaultUrl = 'https://mitrabersih24jam.com/layanan/sedot-wc-bekasi/';
+
+    const updateMeta = (attr: 'name' | 'property', key: string, content: string) => {
+      let el = document.querySelector(`meta[${attr}="${key}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+    };
+
+    const updateLink = (rel: string, href: string) => {
+      let el = document.querySelector(`link[rel="${rel}"]`);
+      if (!el) {
+        el = document.createElement('link');
+        el.setAttribute('rel', rel);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('href', href);
+    };
+
+    if (readingArticle) {
+      const pageTitle = `${readingArticle.title} – Tips Sanitasi Mitra Bersih 24Jam`;
+      const pageDesc = readingArticle.excerpt;
+      const articleImage = readingArticle.image || readingArticle.fallbackImage;
+      const articleUrl = `${window.location.origin}${window.location.pathname}#artikel-${readingArticle.id}`;
+
+      // Update URL hash for sharing without triggering jump
+      if (window.location.hash !== `#artikel-${readingArticle.id}`) {
+        window.history.replaceState(null, '', `#artikel-${readingArticle.id}`);
+      }
+
+      // 1. Dynamic Page Title
+      document.title = pageTitle;
+
+      // 2. Dynamic Meta Description
+      updateMeta('name', 'description', pageDesc);
+
+      // 3. OpenGraph Social Share Card Tags
+      updateMeta('property', 'og:title', pageTitle);
+      updateMeta('property', 'og:description', pageDesc);
+      updateMeta('property', 'og:type', 'article');
+      updateMeta('property', 'og:url', articleUrl);
+      updateMeta('property', 'og:image', articleImage);
+
+      // 4. Twitter / X Card Tags
+      updateMeta('name', 'twitter:title', pageTitle);
+      updateMeta('name', 'twitter:description', pageDesc);
+      updateMeta('name', 'twitter:image', articleImage);
+
+      // 5. Canonical Link
+      updateLink('canonical', articleUrl);
+
+      // 6. Schema.org Article Structured Data (JSON-LD)
+      let scriptTag = document.getElementById('article-schema-ldjson') as HTMLScriptElement | null;
+      if (!scriptTag) {
+        scriptTag = document.createElement('script');
+        scriptTag.id = 'article-schema-ldjson';
+        scriptTag.type = 'application/ld+json';
+        document.head.appendChild(scriptTag);
+      }
+      scriptTag.text = JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'headline': readingArticle.title,
+        'description': readingArticle.excerpt,
+        'image': [articleImage],
+        'datePublished': '2026-09-01T08:00:00+07:00',
+        'dateModified': '2026-10-05T08:00:00+07:00',
+        'articleSection': readingArticle.categoryLabel,
+        'author': {
+          '@type': 'Organization',
+          'name': 'Mitra Bersih 24Jam',
+          'url': window.location.origin,
+        },
+        'publisher': {
+          '@type': 'Organization',
+          'name': 'Sedot WC Mitra Bersih 24Jam',
+          'logo': {
+            '@type': 'ImageObject',
+            'url': defaultImage,
+          },
+        },
+        'mainEntityOfPage': {
+          '@type': 'WebPage',
+          '@id': articleUrl,
+        },
+      });
+    } else {
+      // Revert to Default Website Metadata
+      document.title = defaultTitle;
+      updateMeta('name', 'description', defaultDescription);
+      updateMeta('property', 'og:title', defaultTitle);
+      updateMeta('property', 'og:description', defaultDescription);
+      updateMeta('property', 'og:type', 'website');
+      updateMeta('property', 'og:url', defaultUrl);
+      updateMeta('property', 'og:image', defaultImage);
+      updateMeta('name', 'twitter:title', defaultTitle);
+      updateMeta('name', 'twitter:description', defaultDescription);
+      updateMeta('name', 'twitter:image', defaultImage);
+      updateLink('canonical', defaultUrl);
+
+      // Clean up injected Article JSON-LD
+      const scriptTag = document.getElementById('article-schema-ldjson');
+      if (scriptTag) {
+        scriptTag.remove();
+      }
+
+      // If URL hash was an article hash, restore to tips section anchor
+      if (window.location.hash.startsWith('#artikel-')) {
+        window.history.replaceState(null, '', `${window.location.pathname}#tips`);
+      }
+    }
+
+    return () => {
+      const scriptTag = document.getElementById('article-schema-ldjson');
+      if (scriptTag && !readingArticle) {
+        scriptTag.remove();
+      }
+    };
+  }, [readingArticle]);
 
   const scrollTo = (id: string) => {
     setMenuOpen(false);
@@ -2099,6 +2266,61 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
               <h2 className="text-2xl sm:text-3xl font-black text-[#111111] leading-tight">
                 {readingArticle.title}
               </h2>
+
+              {/* Dynamic Meta & Social Share Bar */}
+              <div className="article-share-bar">
+                <div className="article-meta-indicator">
+                  <span className="meta-indicator-dot"></span>
+                  <span className="text-xs font-bold text-gray-700">Meta SEO &amp; OpenGraph Aktif</span>
+                </div>
+                <div className="article-share-actions">
+                  <button
+                    type="button"
+                    onClick={() => handleCopyArticleLink(readingArticle)}
+                    className={`article-share-btn ${copiedArticleLink ? 'copied' : ''}`}
+                    title="Salin Tautan Artikel Lengkap"
+                  >
+                    <i className={`fas ${copiedArticleLink ? 'fa-check text-green-600' : 'fa-link'}`}></i>
+                    <span>{copiedArticleLink ? 'Tautan Tersalin!' : 'Salin Tautan'}</span>
+                  </button>
+                  <a
+                    href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                      `*${readingArticle.title}*\n\n${readingArticle.excerpt}\n\nBaca artikel selengkapnya di: ${window.location.origin}${window.location.pathname}#artikel-${readingArticle.id}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="article-share-btn share-wa"
+                    title="Bagikan ke WhatsApp"
+                  >
+                    <i className="fab fa-whatsapp text-[#25D366]"></i>
+                    <span>WhatsApp</span>
+                  </a>
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                      `${window.location.origin}${window.location.pathname}#artikel-${readingArticle.id}`
+                    )}&quote=${encodeURIComponent(`${readingArticle.title} - ${readingArticle.excerpt}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="article-share-btn share-fb"
+                    title="Bagikan ke Facebook"
+                  >
+                    <i className="fab fa-facebook-f text-[#1877F2]"></i>
+                    <span>Facebook</span>
+                  </a>
+                  <a
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                      `${readingArticle.title} - Baca tips lengkap sanitasi di:`
+                    )}&url=${encodeURIComponent(`${window.location.origin}${window.location.pathname}#artikel-${readingArticle.id}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="article-share-btn share-twitter"
+                    title="Bagikan ke X / Twitter"
+                  >
+                    <i className="fab fa-x-twitter"></i>
+                    <span>X</span>
+                  </a>
+                </div>
+              </div>
             </div>
 
             <div className="article-modal-body">
@@ -2186,6 +2408,16 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
             <i className="fas fa-check"></i>
           </span>
           <span>Tautan &amp; jawaban FAQ berhasil disalin!</span>
+        </div>
+      )}
+
+      {/* Article Link Copied Toast Notification */}
+      {copiedArticleLink && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[2600] bg-[#111111] text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-3 border border-[#FFD60A] text-sm font-bold animate-bounce">
+          <span className="w-6 h-6 rounded-full bg-[#22C55E] text-white flex items-center justify-center text-xs">
+            <i className="fas fa-check"></i>
+          </span>
+          <span>Tautan artikel &amp; meta preview berhasil disalin!</span>
         </div>
       )}
     </div>
