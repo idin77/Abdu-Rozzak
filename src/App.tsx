@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 
 import articleImg1 from './assets/images/septic_tank_inspection_1791207275527.jpg';
 import articleImg2 from './assets/images/bathroom_toilet_care_1791207290292.jpg';
@@ -6,6 +6,180 @@ import articleImg3 from './assets/images/kitchen_sink_drain_1791207304577.jpg';
 import articleImg4 from './assets/images/vacuum_truck_service_1791207318875.jpg';
 import articleImg5 from './assets/images/inspection_chamber_drain_1791207332865.jpg';
 import articleImg6 from './assets/images/toilet_plunger_emergency_1791207348420.jpg';
+
+export interface CustomerTestimonial {
+  id: number;
+  name: string;
+  roleOrLocation: string;
+  category: 'sedot_wc' | 'mampet' | 'stp' | 'darurat';
+  categoryLabel: string;
+  serviceBadge: string;
+  rating: number;
+  date: string;
+  verified: boolean;
+  avatarInitials: string;
+  avatarColor: string;
+  headline: string;
+  text: string;
+  tagHighlight: string;
+  highlightIcon: string;
+}
+
+const customerTestimonialsData: CustomerTestimonial[] = [
+  {
+    id: 1,
+    name: 'Hendra Wijaya',
+    roleOrLocation: 'Grand Galaxy City, Bekasi Selatan',
+    category: 'sedot_wc',
+    categoryLabel: 'Sedot WC',
+    serviceBadge: 'Kuras Septic Tank & Lumpur',
+    rating: 5,
+    date: '2 hari lalu',
+    verified: true,
+    avatarInitials: 'HW',
+    avatarColor: '#0284C7',
+    headline: 'Septic tank penuh tuntas disedot sampai ke dasar lumpur!',
+    text: 'Rumah saya di perumahan dengan akses jalan yang cukup ramai, tapi armada Mitra Bersih sangat sigap. Selang vakum panjang menjangkau tanpa hambatan, septic tank dikuras tuntas sampai ke endapan lumpur padat. Tidak ada bau tercecer sama sekali ke teras.',
+    tagHighlight: 'Selang 50m & Bebas Bau',
+    highlightIcon: 'fa-wind',
+  },
+  {
+    id: 2,
+    name: 'Ibu Ratna Dewi',
+    roleOrLocation: 'Harapan Indah, Medan Satria',
+    category: 'mampet',
+    categoryLabel: 'Saluran Mampet',
+    serviceBadge: 'Pelancaran Saluran Wastafel & Kloset',
+    rating: 5,
+    date: '4 hari lalu',
+    verified: true,
+    avatarInitials: 'RD',
+    avatarColor: '#DB2777',
+    headline: 'Wastafel dapur mampet beku lemak langsung plong tanpa bongkar lantai',
+    text: 'Lemak sisa masakan sudah menumpuk bertahun-tahun di pipa pembuangan. Teknisi datang membawa mesin spiral fleksibel modern, dalam 35 menit air langsung mengalir kencang tanpa perlu merusak ubin keramik. Biayanya pun sangat wajar dan transparan!',
+    tagHighlight: 'Tanpa Bongkar Keramik',
+    highlightIcon: 'fa-wrench',
+  },
+  {
+    id: 3,
+    name: 'Rudi Hartono (Owner Resto)',
+    roleOrLocation: 'Ruko Kemang Pratama, Rawalumbu',
+    category: 'stp',
+    categoryLabel: 'Limbah STP',
+    serviceBadge: 'Sedot Grease Trap & STP Ruko',
+    rating: 5,
+    date: '1 minggu lalu',
+    verified: true,
+    avatarInitials: 'RH',
+    avatarColor: '#16A34A',
+    headline: 'Mitra andalan restoran kami untuk kuras bak lemak STP berkala',
+    text: 'Sebagai pengelola rumah makan, pembersihan grease trap adalah hal mutlak agar tidak mencemari lingkungan. Tim Mitra Bersih selalu disiplin tepat waktu setiap jadwal maintenance bulanan. Pembuangan limbah resmi ke IPLT Pemda Bekasi dengan dokumen lengkap.',
+    tagHighlight: 'Izin Resmi DLH Bekasi',
+    highlightIcon: 'fa-file-shield',
+  },
+  {
+    id: 4,
+    name: 'dr. Farhan Maulana',
+    roleOrLocation: 'Summarecon Bekasi, Bekasi Utara',
+    category: 'darurat',
+    categoryLabel: 'Darurat 24 Jam',
+    serviceBadge: 'Panggilan Urgent Tengah Malam',
+    rating: 5,
+    date: '1 minggu lalu',
+    verified: true,
+    avatarInitials: 'FM',
+    avatarColor: '#DC2626',
+    headline: 'Telepon jam 11 malam saat kumpul keluarga, 20 menit armada sudah tiba',
+    text: 'Kejadian kloset mendadak meluap saat ada kumpul keluarga besar di rumah. Panik sekali, langsung chat admin WhatsApp Mitra Bersih. Respon dalam 1 menit dan armada tiba sangat kilat. Petugas santun, sigap, dan masalah selesai tuntas malam itu juga!',
+    tagHighlight: 'Respon Kilat < 20 Menit',
+    highlightIcon: 'fa-bolt',
+  },
+  {
+    id: 5,
+    name: 'Hj. Nurhasanah',
+    roleOrLocation: 'Jatiasih (Dekat Pasar Rebo), Bekasi',
+    category: 'sedot_wc',
+    categoryLabel: 'Sedot WC',
+    serviceBadge: 'Sedot WC Rumah Tangga',
+    rating: 5,
+    date: '2 minggu lalu',
+    verified: true,
+    avatarInitials: 'NH',
+    avatarColor: '#7C3AED',
+    headline: 'Lumpur septic tank yang membatu 8 tahun berhasil dihancurkan',
+    text: 'Kondisi septic tank sudah keras karena lama tidak disedot. Teknisi dengan sabar menyemprotkan air tekanan tinggi berkali-kali sampai encer dan tersedot tuntas. Petugasnya ramah, jujur, dan tidak menaikkan harga di tengah pengerjaan. Sangat amanah!',
+    tagHighlight: 'Kuras Lumpur Tuntas',
+    highlightIcon: 'fa-shield-halved',
+  },
+  {
+    id: 6,
+    name: 'Bambang Pamungkas, S.T.',
+    roleOrLocation: 'Perumahan Pondok Timur Indah, Mustikajaya',
+    category: 'mampet',
+    categoryLabel: 'Saluran Mampet',
+    serviceBadge: 'Pelancaran Pipa Kamar Mandi',
+    rating: 5,
+    date: '2 minggu lalu',
+    verified: true,
+    avatarInitials: 'BP',
+    avatarColor: '#D97706',
+    headline: 'Pipa pembuangan lantai 2 tersumbat, ditangani tuntas bergaransi',
+    text: 'Pipa pembuangan air kamar mandi atas mampet parah. Dikerjakan memakai mesin hidro vakum tanpa merusak instalasi pipa PVC rumah. Ditambah garansi kerja yang membuat kami sekeluarga merasa sangat tenang. Rekomendasi teratas di Bekasi!',
+    tagHighlight: 'Garansi Pekerjaan Resmi',
+    highlightIcon: 'fa-certificate',
+  },
+  {
+    id: 7,
+    name: 'Linda Kusuma',
+    roleOrLocation: 'Taman Galaxi Indah, Bekasi Barat',
+    category: 'sedot_wc',
+    categoryLabel: 'Sedot WC',
+    serviceBadge: 'Kuras Septic Tank Rumah',
+    rating: 5,
+    date: '3 minggu lalu',
+    verified: true,
+    avatarInitials: 'LK',
+    avatarColor: '#059669',
+    headline: 'Harga sesuai konfirmasi awal di WhatsApp, tanpa biaya tersembunyi',
+    text: 'Paling kapok dengan tukang sedot WC lain yang awalnya murah tapi pas sampai di lokasi minta biaya tambahan ini itu. Di Mitra Bersih dari awal tanya admin sampai teknisi selesai harga sama persis tanpa ada biaya siluman. Sangat transparan dan profesional.',
+    tagHighlight: 'Harga Transparan di Awal',
+    highlightIcon: 'fa-tags',
+  },
+  {
+    id: 8,
+    name: 'Agus Setiawan',
+    roleOrLocation: 'Kawasan Pergudangan & Industri, Bantargebang',
+    category: 'stp',
+    categoryLabel: 'Limbah STP',
+    serviceBadge: 'Kuras Bak Kontrol & STP Pabrik',
+    rating: 5,
+    date: '1 bulan lalu',
+    verified: true,
+    avatarInitials: 'AS',
+    avatarColor: '#4F46E5',
+    headline: 'Armada tangki besar, teknisi taat K3 dan surat jalan resmi',
+    text: 'Untuk kebutuhan fasilitas industri pergudangan, kami butuh vendor penyedotan limbah yang punya izin AMDAL resmi dan kapasitas tangki memadai. Mitra Bersih memenuhi semua kriteria: teknisi memakai APD lengkap, kerja rapi, dan administrasi tertib.',
+    tagHighlight: 'Standar K3 & Kapasitas Besar',
+    highlightIcon: 'fa-industry',
+  },
+  {
+    id: 9,
+    name: 'Dedi Kurniawan',
+    roleOrLocation: 'Pondok Gede (Masuk Gang Melati), Bekasi',
+    category: 'darurat',
+    categoryLabel: 'Darurat 24 Jam',
+    serviceBadge: 'Penanganan Luapan Air WC',
+    rating: 5,
+    date: '1 bulan lalu',
+    verified: true,
+    avatarInitials: 'DK',
+    avatarColor: '#EA580C',
+    headline: 'Masuk gang sempit tetap dilayani dengan armada fleksibel',
+    text: 'Rumah saya di gang buntu yang mobil biasa tidak bisa putar balik. Mitra Bersih menurunkan armada dengan selang panjang yang ditarik rapi ke dalam rumah tanpa mengganggu tetangga. Pukul 2 malam tetap melayani dengan ramah!',
+    tagHighlight: 'Akses Gang Sempit Lancar',
+    highlightIcon: 'fa-truck-fast',
+  },
+];
 
 interface GalleryItem {
   id: number;
@@ -369,10 +543,67 @@ const galleryData: GalleryItem[] = [
   },
 ];
 
+interface ImageWithSkeletonProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+  containerClassName?: string;
+  fallbackSrc?: string;
+  showIconPlaceholder?: boolean;
+}
+
+function ImageWithSkeleton({
+  src,
+  alt,
+  className = '',
+  containerClassName = '',
+  fallbackSrc,
+  showIconPlaceholder = true,
+  loading = 'lazy',
+  ...props
+}: ImageWithSkeletonProps) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(false);
+    setHasError(false);
+  }, [src]);
+
+  return (
+    <div className={`img-skeleton-container ${containerClassName}`}>
+      {!isLoaded && !hasError && (
+        <div className="img-skeleton-shimmer" aria-hidden="true">
+          <div className="img-skeleton-wave" />
+          {showIconPlaceholder && (
+            <div className="img-skeleton-icon">
+              <i className="fas fa-image text-slate-400 text-lg"></i>
+            </div>
+          )}
+        </div>
+      )}
+      <img
+        src={hasError && fallbackSrc ? fallbackSrc : src}
+        alt={alt}
+        loading={loading}
+        onLoad={() => setIsLoaded(true)}
+        onError={(e) => {
+          if (!hasError && fallbackSrc && e.currentTarget.src !== fallbackSrc) {
+            setHasError(true);
+            e.currentTarget.src = fallbackSrc;
+          } else {
+            setIsLoaded(true);
+          }
+        }}
+        className={`img-with-skeleton ${isLoaded ? 'loaded' : 'loading'} ${className}`}
+        {...props}
+      />
+    </div>
+  );
+}
+
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const [lightboxImg, setLightboxImg] = useState<{ src: string; title: string; desc: string } | null>(null);
   const [openFaqId, setOpenFaqId] = useState<number | null>(1);
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'pricing' | 'booking' | 'coverage'>('all');
@@ -382,6 +613,243 @@ export default function App() {
   const [faqSearchQuery, setFaqSearchQuery] = useState('');
   const [copiedFaqId, setCopiedFaqId] = useState<number | null>(null);
   const [copiedArticleLink, setCopiedArticleLink] = useState(false);
+  const [collapsedSearchIds, setCollapsedSearchIds] = useState<number[]>([]);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [subscribedEmail, setSubscribedEmail] = useState('');
+
+  // Timed Newsletter Popup State (45s trigger)
+  const [showTimedNewsletterModal, setShowTimedNewsletterModal] = useState(false);
+  const [timedNewsletterEmail, setTimedNewsletterEmail] = useState('');
+  const [timedNewsletterStatus, setTimedNewsletterStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+
+  // Touch-Enabled Testimonial Carousel State
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [selectedReviewCategory, setSelectedReviewCategory] = useState<'all' | 'sedot_wc' | 'mampet' | 'stp' | 'darurat'>('all');
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [itemsPerView, setItemsPerView] = useState(3);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStartX, setDragStartX] = useState<number | null>(null);
+
+  // Responsive itemsPerView
+  useEffect(() => {
+    const updateItemsPerView = () => {
+      if (window.innerWidth < 640) {
+        setItemsPerView(1);
+      } else if (window.innerWidth < 1024) {
+        setItemsPerView(2);
+      } else {
+        setItemsPerView(3);
+      }
+    };
+    updateItemsPerView();
+    window.addEventListener('resize', updateItemsPerView);
+    return () => window.removeEventListener('resize', updateItemsPerView);
+  }, []);
+
+  const filteredReviews = useMemo(() => {
+    if (selectedReviewCategory === 'all') return customerTestimonialsData;
+    return customerTestimonialsData.filter((r) => r.category === selectedReviewCategory);
+  }, [selectedReviewCategory]);
+
+  const maxCarouselIndex = Math.max(0, filteredReviews.length - itemsPerView);
+  const safeCarouselIndex = Math.min(carouselIndex, maxCarouselIndex);
+
+  const handlePrevReview = () => {
+    setCarouselIndex((prev) => (prev > 0 ? prev - 1 : maxCarouselIndex));
+  };
+
+  const handleNextReview = () => {
+    setCarouselIndex((prev) => (prev < maxCarouselIndex ? prev + 1 : 0));
+  };
+
+  const handleReviewCategoryChange = (cat: 'all' | 'sedot_wc' | 'mampet' | 'stp' | 'darurat') => {
+    setSelectedReviewCategory(cat);
+    setCarouselIndex(0);
+    setDragOffset(0);
+  };
+
+  // Autoplay effect
+  useEffect(() => {
+    if (!isAutoPlaying || isDragging || maxCarouselIndex <= 0) return;
+    const interval = setInterval(() => {
+      setCarouselIndex((prev) => (prev >= maxCarouselIndex ? 0 : prev + 1));
+    }, 5500);
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, isDragging, maxCarouselIndex]);
+
+  // Touch handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    setDragStartX(e.touches[0].clientX);
+    setDragOffset(0);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || dragStartX === null) return;
+    const diff = e.touches[0].clientX - dragStartX;
+    setDragOffset(diff);
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    if (dragOffset < -45) {
+      handleNextReview();
+    } else if (dragOffset > 45) {
+      handlePrevReview();
+    }
+    setIsDragging(false);
+    setDragStartX(null);
+    setDragOffset(0);
+  };
+
+  // Mouse drag handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragStartX(e.clientX);
+    setDragOffset(0);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || dragStartX === null) return;
+    const diff = e.clientX - dragStartX;
+    setDragOffset(diff);
+  };
+
+  const handleMouseUp = () => {
+    if (!isDragging) return;
+    if (dragOffset < -45) {
+      handleNextReview();
+    } else if (dragOffset > 45) {
+      handlePrevReview();
+    }
+    setIsDragging(false);
+    setDragStartX(null);
+    setDragOffset(0);
+  };
+
+  const handleMouseLeave = () => {
+    if (isDragging) {
+      if (dragOffset < -45) {
+        handleNextReview();
+      } else if (dragOffset > 45) {
+        handlePrevReview();
+      }
+      setIsDragging(false);
+      setDragStartX(null);
+      setDragOffset(0);
+    }
+  };
+
+  const handleDismissTimedNewsletter = (dontShowAgain = false) => {
+    setShowTimedNewsletterModal(false);
+    sessionStorage.setItem('mitra_newsletter_popup_dismissed', 'true');
+    if (dontShowAgain) {
+      localStorage.setItem('mitra_newsletter_subscribed', 'true');
+    }
+  };
+
+  const handleSubscribeTimedNewsletter = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!timedNewsletterEmail.trim() || !timedNewsletterEmail.includes('@')) return;
+    setTimedNewsletterStatus('loading');
+    setTimeout(() => {
+      setTimedNewsletterStatus('success');
+      localStorage.setItem('mitra_newsletter_subscribed', 'true');
+      sessionStorage.setItem('mitra_newsletter_popup_dismissed', 'true');
+      setTimeout(() => {
+        setShowTimedNewsletterModal(false);
+      }, 2500);
+    }, 600);
+  };
+
+  // Print FAQ & Structured Data State
+  const [showPrintFaqModal, setShowPrintFaqModal] = useState(false);
+  const [printScope, setPrintScope] = useState<'current' | 'all'>('current');
+  const [includeStructuredData, setIncludeStructuredData] = useState(true);
+  const [copiedSchemaText, setCopiedSchemaText] = useState(false);
+
+  const itemsToPrint = useMemo(() => {
+    if (printScope === 'all') {
+      return faqData;
+    }
+    const isSearching = faqSearchQuery.trim().length > 0;
+    const q = faqSearchQuery.toLowerCase().trim();
+    const list = faqData.filter((item) => {
+      const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+      if (!isSearching) return matchesCategory;
+      return (
+        matchesCategory &&
+        (item.question.toLowerCase().includes(q) ||
+          item.answer.toLowerCase().includes(q) ||
+          item.categoryLabel.toLowerCase().includes(q))
+      );
+    });
+    return list.length > 0 ? list : faqData;
+  }, [printScope, faqSearchQuery, selectedCategory]);
+
+  const generateFaqSchema = (items: FAQItem[]) => {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: items.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    };
+  };
+
+  const handlePrintFaq = () => {
+    window.print();
+  };
+
+  const handleCopySchemaJson = () => {
+    const schema = generateFaqSchema(itemsToPrint);
+    const jsonStr = JSON.stringify(schema, null, 2);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(jsonStr).then(() => {
+        setCopiedSchemaText(true);
+        setTimeout(() => setCopiedSchemaText(false), 2500);
+      });
+    } else {
+      setCopiedSchemaText(true);
+      setTimeout(() => setCopiedSchemaText(false), 2500);
+    }
+  };
+
+  const handleSubscribeNewsletter = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail.trim() || !newsletterEmail.includes('@')) return;
+    setNewsletterStatus('loading');
+    setTimeout(() => {
+      setSubscribedEmail(newsletterEmail);
+      setNewsletterStatus('success');
+      setNewsletterEmail('');
+    }, 600);
+  };
+
+  const highlightFaqMatch = (text: string, query: string) => {
+    if (!query || !query.trim()) return text;
+    const q = query.trim();
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    const parts = text.split(regex);
+    if (parts.length <= 1) return text;
+    return parts.map((part, i) =>
+      regex.test(part) ? (
+        <mark key={i} className="faq-search-highlight">
+          {part}
+        </mark>
+      ) : (
+        part
+      )
+    );
+  };
 
   const handleCopyFaq = (item: FAQItem) => {
     const textToCopy = `*FAQ Mitra Bersih 24Jam*\n\n*Tanya:* ${item.question}\n\n*Jawab:* ${item.answer}\n\nInfo selengkapnya: ${window.location.origin}#faq`;
@@ -504,6 +972,12 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
         setIsScrolled(false);
       }
 
+      if (window.scrollY > 500) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+
       const sections = ['home', 'layanan', 'tentang', 'galeri', 'kontak', 'faq', 'artikel'];
       const scrollPos = window.scrollY + 120;
 
@@ -520,17 +994,43 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (lightboxImg) setLightboxImg(null);
         if (readingArticle) setReadingArticle(null);
         if (chatbotOpen) setChatbotOpen(false);
+        if (showTimedNewsletterModal) handleDismissTimedNewsletter();
+        if (showPrintFaqModal) setShowPrintFaqModal(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxImg, readingArticle, chatbotOpen]);
+  }, [lightboxImg, readingArticle, chatbotOpen, showTimedNewsletterModal, showPrintFaqModal]);
+
+  // Timed modal popup that invites users to subscribe after 45 seconds on page
+  useEffect(() => {
+    const isDismissed = sessionStorage.getItem('mitra_newsletter_popup_dismissed') === 'true';
+    const isSubscribed = localStorage.getItem('mitra_newsletter_subscribed') === 'true';
+    if (isDismissed || isSubscribed) return;
+
+    const timer = setTimeout(() => {
+      const dismissedCheck = sessionStorage.getItem('mitra_newsletter_popup_dismissed') === 'true';
+      const subscribedCheck = localStorage.getItem('mitra_newsletter_subscribed') === 'true';
+      if (!dismissedCheck && !subscribedCheck) {
+        setShowTimedNewsletterModal(true);
+      }
+    }, 45000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Deep-link support for Articles (#artikel-1, #artikel-2, etc.)
   useEffect(() => {
@@ -554,12 +1054,12 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
 
   // Dynamic meta title, description, OpenGraph, Twitter, and Schema.org tags for opened articles
   useEffect(() => {
-    const defaultTitle = 'Sedot WC Bekasi 24 Jam – Mitra Bersih';
+    const defaultTitle = 'Jasa Sedot WC Bekasi Profesional | Teknisi Berpengalaman';
     const defaultDescription =
-      'Sedot WC Mitra Bersih 24Jam - Layanan sedot WC, septic tank, pelancaran saluran mampet, dan sedot limbah STP di Bekasi. Respon cepat 15 menit, armada modern, bergaransi & harga transparan. Hubungi: +62 857-1565-4183';
+      'Layanan sedot WC & kuras septic tank di Bekasi oleh teknisi berpengalaman. Armada lengkap, hasil bersih, harga jelas di awal. Konsultasi dan survei gratis.';
     const defaultImage =
       'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&h=630&q=85';
-    const defaultUrl = 'https://mitrabersih24jam.com/layanan/sedot-wc-bekasi/';
+    const defaultUrl = 'https://jasasedotwcbekasi.web.id/';
 
     const updateMeta = (attr: 'name' | 'property', key: string, content: string) => {
       let el = document.querySelector(`meta[${attr}="${key}"]`);
@@ -1405,6 +1905,303 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
         </div>
       </section>
 
+      {/* TOUCH-ENABLED TESTIMONIAL CAROUSEL SECTION */}
+      <section className="testimonial-carousel-section" id="ulasan-pelanggan" aria-label="Ulasan Lengkap Pelanggan Mitra Bersih">
+        <div className="container-custom">
+          {/* Section Header */}
+          <div className="section-header">
+            <span className="section-badge">
+              <i className="fas fa-comments text-[#111111] mr-1.5"></i>
+              ULASAN PELANGGAN BEKASI
+            </span>
+            <h2 className="section-title">Suara &amp; Pengalaman Nyata Pelanggan</h2>
+            <p className="section-subtitle">
+              Geser untuk membaca testimoni langsung dari warga, perumahan, pemilik ruko, dan pengelola bisnis di seluruh penjuru Kota Bekasi.
+            </p>
+          </div>
+
+          {/* Social Proof Summary Bar */}
+          <div className="carousel-summary-banner">
+            <div className="carousel-summary-stat">
+              <div className="flex items-center gap-1.5 text-amber-500 text-lg">
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+                <i className="fas fa-star"></i>
+                <span className="font-extrabold text-[#111111] ml-1 text-base">4.9 / 5.0</span>
+              </div>
+              <span className="text-xs text-gray-500 font-medium">Berdasarkan 650+ Ulasan Google &amp; WA</span>
+            </div>
+
+            <div className="carousel-summary-divider hidden sm:block"></div>
+
+            <div className="carousel-summary-stat">
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xs">
+                  <i className="fas fa-shield-alt"></i>
+                </span>
+                <span className="font-bold text-[#111111] text-sm">100% Ulasan Terverifikasi</span>
+              </div>
+              <span className="text-xs text-gray-500 font-medium">Pelanggan Rumah Tangga &amp; Komersial</span>
+            </div>
+
+            <div className="carousel-summary-divider hidden md:block"></div>
+
+            <div className="carousel-summary-stat hidden md:flex">
+              <div className="flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs">
+                  <i className="fas fa-bolt"></i>
+                </span>
+                <span className="font-bold text-[#111111] text-sm">Respon Armada 15–30 Menit</span>
+              </div>
+              <span className="text-xs text-gray-500 font-medium">12 Kecamatan Kota Bekasi Siaga 24 Jam</span>
+            </div>
+          </div>
+
+          {/* Interactive Filter Pills */}
+          <div className="carousel-filter-bar">
+            <div className="carousel-filter-group">
+              <button
+                type="button"
+                onClick={() => handleReviewCategoryChange('all')}
+                className={`carousel-filter-btn ${selectedReviewCategory === 'all' ? 'active' : ''}`}
+              >
+                <span>Semua Ulasan</span>
+                <span className="filter-count">{customerTestimonialsData.length}</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleReviewCategoryChange('sedot_wc')}
+                className={`carousel-filter-btn ${selectedReviewCategory === 'sedot_wc' ? 'active' : ''}`}
+              >
+                <span>Sedot WC</span>
+                <span className="filter-count">
+                  {customerTestimonialsData.filter((r) => r.category === 'sedot_wc').length}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleReviewCategoryChange('mampet')}
+                className={`carousel-filter-btn ${selectedReviewCategory === 'mampet' ? 'active' : ''}`}
+              >
+                <span>Saluran Mampet</span>
+                <span className="filter-count">
+                  {customerTestimonialsData.filter((r) => r.category === 'mampet').length}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleReviewCategoryChange('stp')}
+                className={`carousel-filter-btn ${selectedReviewCategory === 'stp' ? 'active' : ''}`}
+              >
+                <span>Limbah STP / Ruko</span>
+                <span className="filter-count">
+                  {customerTestimonialsData.filter((r) => r.category === 'stp').length}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleReviewCategoryChange('darurat')}
+                className={`carousel-filter-btn ${selectedReviewCategory === 'darurat' ? 'active' : ''}`}
+              >
+                <span>Darurat 24 Jam</span>
+                <span className="filter-count">
+                  {customerTestimonialsData.filter((r) => r.category === 'darurat').length}
+                </span>
+              </button>
+            </div>
+
+            {/* Carousel Top Controls: Counter & Navigation Buttons */}
+            <div className="carousel-top-controls">
+              <span className="carousel-counter-text">
+                <span className="font-bold text-[#111111]">
+                  {Math.min(safeCarouselIndex + 1, filteredReviews.length)}
+                </span>
+                –
+                <span className="font-bold text-[#111111]">
+                  {Math.min(safeCarouselIndex + itemsPerView, filteredReviews.length)}
+                </span>{' '}
+                dari {filteredReviews.length} ulasan
+              </span>
+
+              <div className="carousel-arrows">
+                <button
+                  type="button"
+                  onClick={handlePrevReview}
+                  className="carousel-arrow-btn"
+                  aria-label="Ulasan Sebelumnya"
+                  title="Ulasan Sebelumnya (Geser Kiri)"
+                >
+                  <i className="fas fa-chevron-left"></i>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNextReview}
+                  className="carousel-arrow-btn"
+                  aria-label="Ulasan Selanjutnya"
+                  title="Ulasan Selanjutnya (Geser Kanan)"
+                >
+                  <i className="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Swipe Hint Indicator for Touch Screens */}
+          <div className="carousel-touch-hint">
+            <i className="fas fa-hand-pointer text-amber-500 animate-pulse"></i>
+            <span>Geser kartu (swipe) ke kiri atau kanan untuk menjelajahi testimoni</span>
+          </div>
+
+          {/* Touch-Enabled Carousel Viewport */}
+          <div
+            className={`testimonial-carousel-viewport ${isDragging ? 'is-dragging' : ''}`}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+          >
+            <div
+              className="testimonial-carousel-track"
+              style={{
+                transform: `translateX(calc(-${safeCarouselIndex * (100 / itemsPerView)}% + ${dragOffset}px))`,
+                transition: isDragging ? 'none' : 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+              }}
+            >
+              {filteredReviews.map((item) => (
+                <div
+                  key={item.id}
+                  className="testimonial-carousel-slide"
+                  style={{ width: `${100 / itemsPerView}%` }}
+                >
+                  <div className="testimonial-card-interactive">
+                    {/* Top Row: Category Pill & Verified Badge */}
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <span className={`carousel-cat-tag ${item.category}`}>
+                        {item.categoryLabel}
+                      </span>
+                      <div className="flex items-center gap-1 text-[11.5px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                        <i className="fas fa-check-circle text-emerald-500"></i>
+                        <span>Terverifikasi</span>
+                      </div>
+                    </div>
+
+                    {/* Star Rating & Relative Time */}
+                    <div className="flex items-center justify-between mb-3.5">
+                      <div className="flex items-center gap-1 text-[#FFD60A] text-sm">
+                        {[...Array(item.rating)].map((_, i) => (
+                          <i key={i} className="fas fa-star"></i>
+                        ))}
+                        <span className="text-xs font-bold text-gray-800 ml-1">5.0</span>
+                      </div>
+                      <span className="text-[11.5px] text-gray-400 font-medium">
+                        <i className="far fa-clock mr-1"></i>
+                        {item.date}
+                      </span>
+                    </div>
+
+                    {/* Review Headline */}
+                    <h4 className="text-[15.5px] font-black text-[#111111] leading-snug mb-2.5">
+                      "{item.headline}"
+                    </h4>
+
+                    {/* Review Text */}
+                    <p className="text-gray-600 text-sm leading-relaxed mb-4 flex-1">
+                      {item.text}
+                    </p>
+
+                    {/* Highlight Badge */}
+                    <div className="carousel-highlight-pill mb-4">
+                      <i className={`fas ${item.highlightIcon} text-amber-500`}></i>
+                      <span>{item.tagHighlight}</span>
+                    </div>
+
+                    {/* Author Profile */}
+                    <div className="carousel-author-row">
+                      <div
+                        className="carousel-avatar"
+                        style={{ backgroundColor: item.avatarColor }}
+                      >
+                        {item.avatarInitials}
+                      </div>
+                      <div className="carousel-author-details">
+                        <strong className="text-sm font-extrabold text-[#111111] block">
+                          {item.name}
+                        </strong>
+                        <span className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                          <i className="fas fa-map-marker-alt text-amber-500 text-[11px]"></i>
+                          {item.roleOrLocation}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Carousel Bottom Pagination Dots & Autoplay Toggle */}
+          <div className="carousel-bottom-nav">
+            <div className="carousel-dots-list">
+              {[...Array(maxCarouselIndex + 1)].map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setCarouselIndex(idx);
+                    setDragOffset(0);
+                  }}
+                  className={`carousel-dot-btn ${idx === safeCarouselIndex ? 'active' : ''}`}
+                  aria-label={`Buka slide halaman ${idx + 1}`}
+                />
+              ))}
+            </div>
+
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+                className="carousel-autoplay-btn"
+                title={isAutoPlaying ? 'Jeda Putar Otomatis' : 'Mulai Putar Otomatis'}
+                aria-label={isAutoPlaying ? 'Jeda Putar Otomatis' : 'Mulai Putar Otomatis'}
+              >
+                <i className={`fas ${isAutoPlaying ? 'fa-pause' : 'fa-play'}`}></i>
+                <span className="text-xs font-semibold hidden sm:inline">
+                  {isAutoPlaying ? 'Auto-Slide Aktif' : 'Auto-Slide Jeda'}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom Reassurance / Action Callout */}
+          <div className="carousel-cta-box">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-center sm:text-left">
+                <span className="font-extrabold text-base text-[#111111] block">
+                  Butuh Bantuan Sedot WC atau Saluran Mampet Hari Ini?
+                </span>
+                <span className="text-xs sm:text-sm text-gray-600">
+                  Konsultasikan keluhan Anda tanpa komitmen. Armada kami siap meluncur ke lokasi Anda di Bekasi dalam 15-30 menit.
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => openChatbotWithService('sedot_wc', 'Septic Tank Penuh & Air Kloset Tidak Turun')}
+                className="btn-primary whitespace-nowrap text-xs sm:text-sm px-5 py-2.5 rounded-full font-black shadow-md hover:scale-105 transition-transform flex items-center gap-2"
+              >
+                <i className="fab fa-whatsapp text-lg"></i>
+                <span>Konsultasi &amp; Pesan Cepat</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* GALERI */}
       <section className="galeri" id="galeri">
         <div className="container-custom">
@@ -1423,16 +2220,11 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
                 className="gallery-item"
                 onClick={() => setLightboxImg({ src: item.image, title: item.title, desc: item.desc })}
               >
-                <img
+                <ImageWithSkeleton
                   src={item.image}
                   alt={item.title}
-                  loading="lazy"
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    if (target.src !== item.fallbackImage) {
-                      target.src = item.fallbackImage;
-                    }
-                  }}
+                  fallbackSrc={item.fallbackImage}
+                  containerClassName="w-full h-full"
                 />
                 <div className="gallery-icon">
                   <i className="fas fa-expand"></i>
@@ -1506,21 +2298,56 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
               <input
                 type="text"
                 className="faq-search-input"
-                placeholder="Cari pertanyaan... (misal: tarif, garansi, selang panjang, malam hari, cara pesan)"
+                placeholder="Ketik kata kunci untuk filter langsung... (misal: tarif, garansi, selang panjang, malam hari, cara pesan)"
                 value={faqSearchQuery}
-                onChange={(e) => setFaqSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setFaqSearchQuery(e.target.value);
+                  setCollapsedSearchIds([]);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    setFaqSearchQuery('');
+                  }
+                }}
                 aria-label="Cari Pertanyaan FAQ"
               />
               {faqSearchQuery && (
                 <button
                   type="button"
                   className="faq-search-clear"
-                  onClick={() => setFaqSearchQuery('')}
+                  onClick={() => {
+                    setFaqSearchQuery('');
+                    setCollapsedSearchIds([]);
+                  }}
                   aria-label="Hapus kata kunci pencarian"
+                  title="Hapus pencarian (Esc)"
                 >
                   <i className="fas fa-times"></i>
                 </button>
               )}
+            </div>
+
+            {/* Quick Keyword Suggestion Tags */}
+            <div className="faq-quick-tags">
+              <span className="faq-quick-tag-label">
+                <i className="fas fa-bolt text-[#D97706]"></i> Populer:
+              </span>
+              {['Tarif & Biaya', 'Garansi', 'Selang Panjang', 'Malam Hari', 'Gang Sempit', 'Metode Bayar'].map((tag) => {
+                const isActive = faqSearchQuery.toLowerCase() === tag.toLowerCase();
+                return (
+                  <button
+                    key={tag}
+                    type="button"
+                    className={`faq-quick-tag-btn ${isActive ? 'active' : ''}`}
+                    onClick={() => {
+                      setFaqSearchQuery(isActive ? '' : tag);
+                      setCollapsedSearchIds([]);
+                    }}
+                  >
+                    {tag}
+                  </button>
+                );
+              })}
             </div>
 
             {faqSearchQuery && (
@@ -1536,11 +2363,41 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
                         item.categoryLabel.toLowerCase().includes(q)
                       );
                     }).length
-                  }</strong> pertanyaan untuk "<em>{faqSearchQuery}</em>"
+                  }</strong> pertanyaan relevan secara <em>real-time</em> untuk "<strong>{faqSearchQuery}</strong>"
+                  {selectedCategory !== 'all' && (() => {
+                    const q = faqSearchQuery.toLowerCase().trim();
+                    const totalAcrossAll = faqData.filter(
+                      (item) =>
+                        item.question.toLowerCase().includes(q) ||
+                        item.answer.toLowerCase().includes(q) ||
+                        item.categoryLabel.toLowerCase().includes(q)
+                    ).length;
+                    const inThisCat = faqData.filter((item) => {
+                      const matchesCategory = item.category === selectedCategory;
+                      return matchesCategory && (
+                        item.question.toLowerCase().includes(q) ||
+                        item.answer.toLowerCase().includes(q) ||
+                        item.categoryLabel.toLowerCase().includes(q)
+                      );
+                    }).length;
+
+                    if (totalAcrossAll > inThisCat) {
+                      return (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedCategory('all')}
+                          className="ml-2 font-bold text-[#075E54] underline hover:text-black cursor-pointer"
+                        >
+                          (Lihat {totalAcrossAll} di Semua Kategori)
+                        </button>
+                      );
+                    }
+                    return null;
+                  })()}
                 </span>
                 <button
                   type="button"
-                  onClick={() => { setFaqSearchQuery(''); setSelectedCategory('all'); }}
+                  onClick={() => { setFaqSearchQuery(''); setSelectedCategory('all'); setCollapsedSearchIds([]); }}
                   className="faq-search-reset-btn"
                 >
                   Reset Pencarian
@@ -1549,65 +2406,72 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
             )}
           </div>
 
-          {/* Category Tabs */}
-          <div className="faq-categories">
+          {/* Category Tabs with Dynamic Real-time Counters & Print Action */}
+          <div className="faq-toolbar-row">
+            <div className="faq-categories">
+              {([
+                { key: 'all' as const, label: 'Semua', icon: null },
+                { key: 'pricing' as const, label: 'Pricing', icon: 'fas fa-tags' },
+                { key: 'booking' as const, label: 'Booking', icon: 'fas fa-calendar-check' },
+                { key: 'coverage' as const, label: 'Coverage', icon: 'fas fa-map-marker-alt' },
+              ]).map((tab) => {
+                const q = faqSearchQuery.toLowerCase().trim();
+                const count = faqData.filter((item) => {
+                  const matchesCategory = tab.key === 'all' || item.category === tab.key;
+                  if (!q) return matchesCategory;
+                  return matchesCategory && (
+                    item.question.toLowerCase().includes(q) ||
+                    item.answer.toLowerCase().includes(q) ||
+                    item.categoryLabel.toLowerCase().includes(q)
+                  );
+                }).length;
+
+                return (
+                  <button
+                    key={tab.key}
+                    className={`faq-cat-btn ${selectedCategory === tab.key ? 'active' : ''}`}
+                    onClick={() => {
+                      setSelectedCategory(tab.key);
+                      setCollapsedSearchIds([]);
+                      if (!faqSearchQuery.trim()) {
+                        const firstInCat = faqData.find((i) => tab.key === 'all' || i.category === tab.key);
+                        if (firstInCat) setOpenFaqId(firstInCat.id);
+                      }
+                    }}
+                  >
+                    {tab.icon && <i className={`${tab.icon} mr-1`}></i>}
+                    <span>{tab.label}</span>
+                    <span className="faq-cat-count">{count}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Print FAQ & Structured Data Button */}
             <button
-              className={`faq-cat-btn ${selectedCategory === 'all' ? 'active' : ''}`}
+              type="button"
               onClick={() => {
-                setSelectedCategory('all');
-                setOpenFaqId(1);
+                setPrintScope(faqSearchQuery.trim() || selectedCategory !== 'all' ? 'current' : 'all');
+                setShowPrintFaqModal(true);
               }}
+              className="faq-print-btn"
+              title="Cetak atau unduh versi print-friendly FAQ beserta referensi Schema.org JSON-LD"
+              aria-label="Cetak Dokumen FAQ"
             >
-              <span>Semua</span>
-              <span className="faq-cat-count">{faqData.length}</span>
-            </button>
-            <button
-              className={`faq-cat-btn ${selectedCategory === 'pricing' ? 'active' : ''}`}
-              onClick={() => {
-                setSelectedCategory('pricing');
-                setOpenFaqId(1);
-              }}
-            >
-              <i className="fas fa-tags mr-1"></i>
-              <span>Pricing</span>
-              <span className="faq-cat-count">
-                {faqData.filter((i) => i.category === 'pricing').length}
-              </span>
-            </button>
-            <button
-              className={`faq-cat-btn ${selectedCategory === 'booking' ? 'active' : ''}`}
-              onClick={() => {
-                setSelectedCategory('booking');
-                setOpenFaqId(4);
-              }}
-            >
-              <i className="fas fa-calendar-check mr-1"></i>
-              <span>Booking</span>
-              <span className="faq-cat-count">
-                {faqData.filter((i) => i.category === 'booking').length}
-              </span>
-            </button>
-            <button
-              className={`faq-cat-btn ${selectedCategory === 'coverage' ? 'active' : ''}`}
-              onClick={() => {
-                setSelectedCategory('coverage');
-                setOpenFaqId(7);
-              }}
-            >
-              <i className="fas fa-map-marker-alt mr-1"></i>
-              <span>Coverage</span>
-              <span className="faq-cat-count">
-                {faqData.filter((i) => i.category === 'coverage').length}
-              </span>
+              <i className="fas fa-print"></i>
+              <span>Cetak Dokumen FAQ</span>
+              <span className="faq-print-badge-mini">PDF &amp; Schema</span>
             </button>
           </div>
 
           {/* FAQ Accordion List / Empty State */}
           {(() => {
+            const isSearching = faqSearchQuery.trim().length > 0;
+            const q = faqSearchQuery.toLowerCase().trim();
+
             const filteredList = faqData.filter((item) => {
               const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-              if (!faqSearchQuery.trim()) return matchesCategory;
-              const q = faqSearchQuery.toLowerCase().trim();
+              if (!isSearching) return matchesCategory;
               return matchesCategory && (
                 item.question.toLowerCase().includes(q) ||
                 item.answer.toLowerCase().includes(q) ||
@@ -1628,7 +2492,7 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
                   <div className="faq-empty-actions">
                     <button
                       type="button"
-                      onClick={() => { setFaqSearchQuery(''); setSelectedCategory('all'); }}
+                      onClick={() => { setFaqSearchQuery(''); setSelectedCategory('all'); setCollapsedSearchIds([]); }}
                       className="btn-faq-reset"
                     >
                       <i className="fas fa-undo mr-1.5"></i> Tampilkan Semua FAQ
@@ -1649,19 +2513,37 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
             return (
               <div className="faq-list">
                 {filteredList.map((item) => {
-                  const isOpen = openFaqId === item.id;
+                  // In real-time search mode, matching questions and answers are visible by default
+                  const isOpen = isSearching
+                    ? !collapsedSearchIds.includes(item.id)
+                    : openFaqId === item.id;
+
+                  const handleToggleItem = () => {
+                    if (isSearching) {
+                      if (collapsedSearchIds.includes(item.id)) {
+                        setCollapsedSearchIds(collapsedSearchIds.filter((id) => id !== item.id));
+                      } else {
+                        setCollapsedSearchIds([...collapsedSearchIds, item.id]);
+                      }
+                    } else {
+                      setOpenFaqId(isOpen ? null : item.id);
+                    }
+                  };
+
                   return (
                     <div key={item.id} className={`faq-card ${isOpen ? 'open' : ''}`}>
                       <button
                         className="faq-header"
-                        onClick={() => setOpenFaqId(isOpen ? null : item.id)}
+                        onClick={handleToggleItem}
                         aria-expanded={isOpen}
                       >
                         <div className="faq-header-left">
                           <span className={`faq-category-badge ${item.badgeClass}`}>
-                            {item.categoryLabel}
+                            {highlightFaqMatch(item.categoryLabel, faqSearchQuery)}
                           </span>
-                          <span className="faq-question-text">{item.question}</span>
+                          <span className="faq-question-text">
+                            {highlightFaqMatch(item.question, faqSearchQuery)}
+                          </span>
                         </div>
                         <div className="faq-header-actions">
                           <button
@@ -1683,7 +2565,7 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
                       </button>
                       {isOpen && (
                         <div className="faq-body">
-                          <p>{item.answer}</p>
+                          <p>{highlightFaqMatch(item.answer, faqSearchQuery)}</p>
 
                           {/* Share Options Bar */}
                           <div className="faq-footer-actions">
@@ -1832,17 +2714,12 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
               .map((article) => (
                 <article key={article.id} className="tip-card">
                   <div className="tip-card-img-wrapper">
-                    <img
+                    <ImageWithSkeleton
                       src={article.image}
                       alt={article.title}
+                      fallbackSrc={article.fallbackImage}
                       className="tip-card-img"
-                      loading="lazy"
-                      onError={(e) => {
-                        const target = e.currentTarget;
-                        if (target.src !== article.fallbackImage) {
-                          target.src = article.fallbackImage;
-                        }
-                      }}
+                      containerClassName="w-full h-full"
                     />
                     <span className="tip-badge">{article.categoryLabel}</span>
                     <span className="tip-read-time">
@@ -1999,6 +2876,18 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
           </div>
         </div>
       </footer>
+
+      {/* FLOATING BACK TO TOP BUTTON */}
+      <button
+        type="button"
+        className={`back-to-top-btn ${showBackToTop && !chatbotOpen ? 'visible' : ''}`}
+        onClick={scrollToTop}
+        aria-label="Kembali ke atas halaman"
+        title="Kembali ke Atas"
+      >
+        <i className="fas fa-arrow-up"></i>
+        <span className="back-to-top-tooltip hidden sm:inline-block">Ke Atas</span>
+      </button>
 
       {/* FLOATING WHATSAPP & CHATBOT WIDGET */}
       <div className="wa-widget-container">
@@ -2237,18 +3126,15 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
             </button>
 
             <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-t-3xl">
-              <img
+              <ImageWithSkeleton
                 src={readingArticle.image}
                 alt={readingArticle.title}
+                fallbackSrc={readingArticle.fallbackImage}
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  if (target.src !== readingArticle.fallbackImage) {
-                    target.src = readingArticle.fallbackImage;
-                  }
-                }}
+                containerClassName="w-full h-full"
+                loading="eager"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-6">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-6 pointer-events-none">
                 <div>
                   <span className="bg-[#FFD60A] text-black font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
                     {readingArticle.categoryLabel}
@@ -2361,6 +3247,78 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
                     <i className="fab fa-whatsapp"></i> Konsultasi Sekarang
                   </a>
                 </div>
+
+                {/* Email Newsletter Subscription Section */}
+                <div className="article-newsletter-box">
+                  <div className="article-newsletter-header">
+                    <div className="article-newsletter-icon">
+                      <i className="fas fa-envelope-open-text"></i>
+                    </div>
+                    <div className="article-newsletter-text">
+                      <h4>Langganan Tips Perawatan Sanitasi Bulanan</h4>
+                      <p>
+                        Dapatkan panduan praktis merawat septic tank, jadwal kuras berkala, dan cara mencegah saluran mampet langsung ke email Anda setiap bulan.
+                      </p>
+                    </div>
+                  </div>
+
+                  {newsletterStatus === 'success' ? (
+                    <div className="article-newsletter-success">
+                      <div className="article-newsletter-success-content">
+                        <div className="article-newsletter-success-icon">
+                          <i className="fas fa-check"></i>
+                        </div>
+                        <p>
+                          Terima kasih! Email <strong>{subscribedEmail}</strong> berhasil terdaftar untuk menerima tips sanitasi bulanan Mitra Bersih.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setNewsletterStatus('idle')}
+                        className="article-newsletter-reset-btn"
+                      >
+                        Daftar email lain
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSubscribeNewsletter} className="article-newsletter-form">
+                      <div className="article-newsletter-input-wrap">
+                        <i className="fas fa-envelope article-newsletter-input-icon"></i>
+                        <input
+                          type="email"
+                          required
+                          className="article-newsletter-input"
+                          placeholder="Masukkan email Anda (contoh: nama@email.com)"
+                          value={newsletterEmail}
+                          onChange={(e) => setNewsletterEmail(e.target.value)}
+                          disabled={newsletterStatus === 'loading'}
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="article-newsletter-btn"
+                        disabled={newsletterStatus === 'loading'}
+                      >
+                        {newsletterStatus === 'loading' ? (
+                          <>
+                            <i className="fas fa-spinner fa-spin"></i>
+                            <span>Mendaftar...</span>
+                          </>
+                        ) : (
+                          <>
+                            <i className="fas fa-paper-plane"></i>
+                            <span>Langganan Gratis</span>
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  )}
+
+                  <div className="article-newsletter-privacy">
+                    <i className="fas fa-shield-alt text-[#22C55E]"></i>
+                    <span>Privasi aman 100%. Kami tidak mengirim spam &amp; Anda dapat unsubscribe kapan saja.</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2387,11 +3345,13 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
             <i className="fas fa-times"></i>
           </button>
           <div className="flex flex-col items-center max-w-4xl max-h-[90vh]">
-            <img
+            <ImageWithSkeleton
               src={lightboxImg.src}
               alt={lightboxImg.title}
               id="lightboxImage"
-              className="max-h-[75vh]"
+              className="max-h-[75vh] object-contain"
+              containerClassName="max-h-[75vh] min-h-[300px] min-w-[300px] flex items-center justify-center rounded-xl overflow-hidden bg-black/40"
+              loading="eager"
             />
             <div className="text-white text-center mt-3 bg-black/60 px-4 py-2 rounded-lg backdrop-blur-sm">
               <h4 className="font-bold text-lg text-[#FFD60A]">{lightboxImg.title}</h4>
@@ -2418,6 +3378,361 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
             <i className="fas fa-check"></i>
           </span>
           <span>Tautan artikel &amp; meta preview berhasil disalin!</span>
+        </div>
+      )}
+
+      {/* TIMED NON-INTRUSIVE NEWSLETTER POPUP (45s TRIGGER) */}
+      {showTimedNewsletterModal && (
+        <div
+          className="timed-newsletter-backdrop"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleDismissTimedNewsletter();
+          }}
+        >
+          <div
+            className="timed-newsletter-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="timed-nl-title"
+          >
+            <button
+              className="timed-newsletter-close"
+              onClick={() => handleDismissTimedNewsletter()}
+              aria-label="Tutup Popup"
+              title="Tutup (Esc)"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+
+            <div className="timed-newsletter-badge">
+              <i className="fas fa-sparkles text-[#FFD60A] mr-1.5"></i>
+              BULETIN SANITASI BULANAN
+            </div>
+
+            <h3 id="timed-nl-title" className="timed-newsletter-title">
+              Jaga Sanitasi &amp; Kloset Rumah Anda Tetap Bebas Mampet!
+            </h3>
+
+            <p className="timed-newsletter-desc">
+              Dapatkan panduan rutin teknisi Mitra Bersih: jadwal sedot septic tank tepat waktu, trik darurat cegah pipa meluap, dan tips hemat perawatan saluran air rumah tangga di Bekasi.
+            </p>
+
+            {timedNewsletterStatus === 'success' ? (
+              <div className="timed-newsletter-success">
+                <div className="timed-newsletter-success-icon">
+                  <i className="fas fa-check"></i>
+                </div>
+                <div>
+                  <strong>Pendaftaran Berhasil!</strong>
+                  <p>Terima kasih telah bergabung. Tips sanitasi bulanan akan segera mendarat di inbox email Anda.</p>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribeTimedNewsletter} className="timed-newsletter-form">
+                <div className="timed-newsletter-input-group">
+                  <i className="fas fa-envelope timed-newsletter-input-icon"></i>
+                  <input
+                    type="email"
+                    required
+                    placeholder="Masukkan email Anda (contoh: nama@email.com)"
+                    value={timedNewsletterEmail}
+                    onChange={(e) => setTimedNewsletterEmail(e.target.value)}
+                    className="timed-newsletter-input"
+                    disabled={timedNewsletterStatus === 'loading'}
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="timed-newsletter-submit-btn"
+                  disabled={timedNewsletterStatus === 'loading'}
+                >
+                  {timedNewsletterStatus === 'loading' ? (
+                    <>
+                      <i className="fas fa-spinner fa-spin"></i>
+                      <span>Memproses...</span>
+                    </>
+                  ) : (
+                    <>
+                      <i className="fas fa-paper-plane"></i>
+                      <span>Langganan Gratis Sekarang</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+
+            <div className="timed-newsletter-footer">
+              <div className="timed-newsletter-privacy">
+                <i className="fas fa-shield-alt text-[#22C55E]"></i>
+                <span>Privasi 100% terjaga. Unsubscribe kapan saja.</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => handleDismissTimedNewsletter(true)}
+                className="timed-newsletter-dismiss-btn"
+              >
+                Nanti Saja
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PRINT FAQ & STRUCTURED DATA MODAL DIALOG */}
+      {showPrintFaqModal && (
+        <div
+          className="print-modal-backdrop"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowPrintFaqModal(false);
+          }}
+        >
+          <div
+            className="print-modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="print-modal-title"
+          >
+            {/* Header / Toolbar (No Print) */}
+            <div className="print-modal-header no-print">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#FFD60A] text-[#111111] flex items-center justify-center text-lg font-bold shadow-sm">
+                  <i className="fas fa-print"></i>
+                </div>
+                <div>
+                  <h3 id="print-modal-title" className="text-lg sm:text-xl font-black text-[#111111] leading-tight">
+                    Cetak Dokumen FAQ &amp; Structured Data
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Format resmi siap cetak (A4/PDF) &amp; referensi teknis Schema.org FAQPage
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="print-modal-close"
+                onClick={() => setShowPrintFaqModal(false)}
+                aria-label="Tutup Pratinjau Cetak"
+                title="Tutup (Esc)"
+              >
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+
+            {/* Print Configuration Controls (No Print) */}
+            <div className="print-modal-controls no-print">
+              {/* Scope Selector */}
+              <div className="print-control-group">
+                <label className="print-control-label">
+                  <i className="fas fa-list-check text-gray-500 mr-1.5"></i> Cakupan Daftar FAQ:
+                </label>
+                <div className="print-scope-options">
+                  <button
+                    type="button"
+                    onClick={() => setPrintScope('current')}
+                    className={`print-scope-btn ${printScope === 'current' ? 'active' : ''}`}
+                  >
+                    <span>Filter Saat Ini</span>
+                    <span className="scope-badge">
+                      {faqData.filter((item) => {
+                        const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+                        const q = faqSearchQuery.toLowerCase().trim();
+                        if (!q) return matchesCategory;
+                        return (
+                          matchesCategory &&
+                          (item.question.toLowerCase().includes(q) ||
+                            item.answer.toLowerCase().includes(q) ||
+                            item.categoryLabel.toLowerCase().includes(q))
+                        );
+                      }).length} Tanya Jawab
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPrintScope('all')}
+                    className={`print-scope-btn ${printScope === 'all' ? 'active' : ''}`}
+                  >
+                    <span>Seluruh FAQ Resmi</span>
+                    <span className="scope-badge">{faqData.length} Tanya Jawab</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Options Checkboxes & Action Buttons */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-gray-200">
+                <label className="print-checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={includeStructuredData}
+                    onChange={(e) => setIncludeStructuredData(e.target.checked)}
+                    className="print-checkbox"
+                  />
+                  <span className="text-xs sm:text-sm font-semibold text-gray-700">
+                    Sertakan Referensi Structured Data (Schema.org / JSON-LD)
+                  </span>
+                </label>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleCopySchemaJson}
+                    className={`btn-secondary-print ${copiedSchemaText ? 'copied' : ''}`}
+                    title="Salin kode Schema.org JSON-LD ke papan klip"
+                  >
+                    <i className={`fas ${copiedSchemaText ? 'fa-check text-green-600' : 'fa-code'}`}></i>
+                    <span>{copiedSchemaText ? 'JSON-LD Tersalin!' : 'Salin JSON-LD'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handlePrintFaq}
+                    className="btn-primary-print"
+                    title="Buka dialog cetak browser atau simpan ke format PDF"
+                  >
+                    <i className="fas fa-print"></i>
+                    <span>Cetak Sekarang (Print / PDF)</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Live Paper Document Preview */}
+            <div className="print-modal-preview-scroll">
+              <div id="printable-faq-document" className="printable-faq-sheet">
+                {/* Official Letterhead Header */}
+                <div className="print-letterhead">
+                  <div className="print-brand-row">
+                    <div className="print-brand-info">
+                      <div className="print-badge-kicker">DOKUMEN RESMI PELAYANAN SANITASI</div>
+                      <h1 className="print-brand-name">SEDOT WC MITRA BERSIH 24 JAM BEKASI</h1>
+                      <p className="print-brand-tagline">
+                        Layanan Resmi Sedot WC, Kuras Septic Tank, Pelancaran Saluran Mampet &amp; Pengolahan Limbah STP
+                      </p>
+                    </div>
+                    <div className="print-badge-box">
+                      <span className="print-badge-verified">RESMI &amp; TERVERIFIKASI</span>
+                      <span className="print-badge-sub">STANDAR K3 &amp; IZIN PEMDA</span>
+                    </div>
+                  </div>
+
+                  <div className="print-meta-grid">
+                    <div>
+                      <span className="meta-label">Nomor Dokumen:</span>
+                      <strong>MB24/FAQ-DOC/{new Date().getFullYear()}</strong>
+                    </div>
+                    <div>
+                      <span className="meta-label">Tanggal Cetak:</span>
+                      <strong>
+                        {new Intl.DateTimeFormat('id-ID', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        }).format(new Date())}
+                      </strong>
+                    </div>
+                    <div>
+                      <span className="meta-label">Layanan Siaga 24 Jam:</span>
+                      <strong>+62 857-1565-4183 (WhatsApp / Telp)</strong>
+                    </div>
+                    <div>
+                      <span className="meta-label">Website Resmi:</span>
+                      <strong>https://jasasedotwcbekasi.web.id/</strong>
+                    </div>
+                    <div>
+                      <span className="meta-label">Cakupan Wilayah:</span>
+                      <strong>12 Kecamatan Kota Bekasi &amp; Sekitarnya</strong>
+                    </div>
+                    <div>
+                      <span className="meta-label">Jumlah Pertanyaan:</span>
+                      <strong>
+                        {itemsToPrint.length} Tanya Jawab (
+                        {printScope === 'all' ? 'Seluruh FAQ' : 'Daftar Terfilter'})
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="print-divider"></div>
+
+                {/* FAQ Questions & Answers */}
+                <div className="print-section-heading">
+                  <h2>DAFTAR TANYA JAWAB (FAQ) &amp; TRANSPARANSI BIAYA</h2>
+                  <p>
+                    Berikut adalah komitmen panduan pelayanan, transparansi harga di awal, dan jaminan pengerjaan bersih dari teknisi Mitra Bersih 24 Jam.
+                  </p>
+                </div>
+
+                <div className="print-faq-items-list">
+                  {itemsToPrint.map((item, idx) => (
+                    <div key={item.id} className="print-faq-entry">
+                      <div className="print-q-header">
+                        <span className="print-q-badge">Q{idx + 1}</span>
+                        <span className="print-cat-indicator">[{item.categoryLabel}]</span>
+                        <h3 className="print-q-title">{item.question}</h3>
+                      </div>
+                      <div className="print-a-body">
+                        <span className="print-a-tag">Jawaban:</span>
+                        <p className="print-a-text">{item.answer}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Structured Data Reference Section */}
+                {includeStructuredData && (
+                  <div className="print-schema-container">
+                    <div className="print-schema-header">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+                        <h3 className="print-schema-title">
+                          REFERENSI STRUCTURED DATA (Schema.org / JSON-LD FAQPage)
+                        </h3>
+                      </div>
+                      <span className="print-schema-badge">Google Rich Snippets Ready</span>
+                    </div>
+                    <p className="print-schema-desc">
+                      Struktur data resmi berstandar Schema.org FAQPage yang disematkan dalam markup aplikasi untuk memungkinkan pengindeksan snippet tanya-jawab interaktif pada mesin pencari Google:
+                    </p>
+                    <pre className="print-schema-codeblock">
+                      <code>{JSON.stringify(generateFaqSchema(itemsToPrint), null, 2)}</code>
+                    </pre>
+                  </div>
+                )}
+
+                {/* Document Legal & Footer Notice */}
+                <div className="print-doc-footer">
+                  <div className="print-footer-brand">
+                    <strong>SEDOT WC MITRA BERSIH 24 JAM BEKASI</strong>
+                    <span>
+                      Solusi Sanitasi Terpercaya · Armada Bersih · Hasil Tuntas Tanpa Bau · Harga Transparan di Awal
+                    </span>
+                  </div>
+                  <div className="print-footer-legal">
+                    <p>
+                      Dokumen ini dicetak sebagai referensi resmi pelanggan. Informasi harga dan spesifikasi teknis pengerjaan dijamin berlaku sesuai perjanjian awal pemesanan tanpa biaya siluman.
+                    </p>
+                    <p className="print-footer-copy">
+                      &copy; 2024–{new Date().getFullYear()} Mitra Bersih 24Jam Kota Bekasi. Hak cipta dilindungi undang-undang.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Modal Footer (No Print) */}
+            <div className="print-modal-bottom-bar no-print">
+              <span className="text-xs text-gray-500 flex items-center gap-1.5">
+                <i className="fas fa-info-circle text-blue-500"></i>
+                Tip: Anda dapat memilih opsi "Save as PDF" / "Simpan sebagai PDF" pada jendela cetak browser.
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowPrintFaqModal(false)}
+                className="btn-cancel-print"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
