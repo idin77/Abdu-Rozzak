@@ -189,10 +189,12 @@ interface GalleryItem {
   desc: string;
 }
 
-interface FAQItem {
+export interface FAQItem {
   id: number;
-  category: 'pricing' | 'booking' | 'coverage';
+  category: 'prosedur' | 'harga' | 'legalitas';
   categoryLabel: string;
+  serviceGroup: 'prosedur' | 'harga' | 'legalitas';
+  serviceGroupLabel: string;
   badgeClass: string;
   question: string;
   answer: string;
@@ -401,87 +403,343 @@ const articlesData: ArticleItem[] = [
   },
 ];
 
+export interface ServiceCategoryMeta {
+  key: 'harga' | 'prosedur' | 'legalitas';
+  label: string;
+  fullTitle: string;
+  icon: string;
+  desc: string;
+  badgeClass: string;
+}
+
+export const serviceCategoriesList: ServiceCategoryMeta[] = [
+  {
+    key: 'prosedur',
+    label: 'Prosedur',
+    fullTitle: 'Prosedur Pemesanan & Teknis Pengerjaan',
+    icon: 'fas fa-clipboard-list',
+    desc: 'Langkah pemesanan cepat via WhatsApp, armada tiba 15–30 menit, teknik vakum tanpa bongkar lantai, dan akses gang sempit.',
+    badgeClass: 'faq-cat-prosedur',
+  },
+  {
+    key: 'harga',
+    label: 'Harga',
+    fullTitle: 'Transparansi Harga & Biaya Layanan',
+    icon: 'fas fa-tags',
+    desc: 'Biaya pasti di awal, tanpa biaya siluman, bebas biaya selang panjang, dan opsi pembayaran tunai / transfer / QRIS.',
+    badgeClass: 'faq-cat-harga',
+  },
+  {
+    key: 'legalitas',
+    label: 'Legalitas',
+    fullTitle: 'Legalitas, Izin DLH & Garansi Resmi',
+    icon: 'fas fa-shield-alt',
+    desc: 'Izin resmi operasional DLH Kota Bekasi, pembuangan legal ke IPLT Sumur Batu, jaminan garansi kerja, dan dokumen SPK/Invoice resmi.',
+    badgeClass: 'faq-cat-legalitas',
+  },
+];
+
 const faqData: FAQItem[] = [
+  // --- KATEGORI: HARGA ---
   {
     id: 1,
-    category: 'pricing',
-    categoryLabel: 'Pricing',
-    badgeClass: 'faq-cat-pricing',
+    category: 'harga',
+    serviceGroup: 'harga',
+    serviceGroupLabel: 'Harga',
+    categoryLabel: 'Harga',
+    badgeClass: 'faq-cat-harga',
     question: 'Berapa estimasi biaya jasa sedot WC dan pelancaran saluran di Mitra Bersih?',
     answer: 'Tarif kami sangat transparan dan kompetitif. Biaya ditentukan berdasarkan jenis layanan (sedot septic tank penuh, pelancaran WC mampet, atau sedot limbah STP), kapasitas tangki, serta tingkat kesulitan. Estimasi harga pasti akan kami informasikan di awal sebelum armada berangkat, tanpa ada biaya siluman atau biaya tersembunyi.',
   },
   {
     id: 2,
-    category: 'pricing',
-    categoryLabel: 'Pricing',
-    badgeClass: 'faq-cat-pricing',
+    category: 'harga',
+    serviceGroup: 'harga',
+    serviceGroupLabel: 'Harga',
+    categoryLabel: 'Harga',
+    badgeClass: 'faq-cat-harga',
     question: 'Apakah ada biaya tambahan untuk selang panjang atau pekerjaan malam hari?',
     answer: 'Tidak ada biaya tersembunyi. Kami menyediakan panjang selang standar hingga puluhan meter secara gratis yang dapat menjangkau perumahan padat atau gang sempit. Layanan darurat 24 jam di malam hari juga dilayani dengan tarif resmi yang disepakati bersama sejak awal konsultasi.',
   },
   {
     id: 3,
-    category: 'pricing',
-    categoryLabel: 'Pricing',
-    badgeClass: 'faq-cat-pricing',
+    category: 'harga',
+    serviceGroup: 'harga',
+    serviceGroupLabel: 'Harga',
+    categoryLabel: 'Harga',
+    badgeClass: 'faq-cat-harga',
     question: 'Metode pembayaran apa saja yang diterima?',
     answer: 'Pembayaran dilakukan setelah proses pengerjaan selesai dan Anda memastikan WC atau saluran pipa sudah mengalir lancar dan bersih kembali. Kami menerima pembayaran secara Tunai (Cash) langsung ke teknisi atau melalui Transfer Bank / QRIS.',
   },
   {
     id: 4,
-    category: 'booking',
-    categoryLabel: 'Booking',
-    badgeClass: 'faq-cat-booking',
-    question: 'Bagaimana cara melakukan pemesanan dan konsultasi?',
+    category: 'harga',
+    serviceGroup: 'harga',
+    serviceGroupLabel: 'Harga',
+    categoryLabel: 'Harga',
+    badgeClass: 'faq-cat-harga',
+    question: 'Apakah ada kepastian harga sebelum teknisi memulai pengerjaan di lokasi?',
+    answer: 'Pasti. Teknisi kami wajib mengonfirmasi ulang rincian biaya yang telah disepakati melalui WhatsApp/telepon sebelum selang diturunkan ke tangki. Jika terdapat ketidaksesuaian saat survei di lokasi dan Anda tidak setuju, Anda berhak membatalkan tanpa dikenakan biaya pinalti apa pun (survei dan konsultasi gratis).',
+  },
+
+  // --- KATEGORI: PROSEDUR ---
+  {
+    id: 5,
+    category: 'prosedur',
+    serviceGroup: 'prosedur',
+    serviceGroupLabel: 'Prosedur',
+    categoryLabel: 'Prosedur',
+    badgeClass: 'faq-cat-prosedur',
+    question: 'Bagaimana prosedur melakukan pemesanan dan konsultasi?',
     answer: 'Pemesanan sangat praktis! Anda cukup klik tombol WhatsApp atau hubungi telepon kami di +62 857-1565-4183. Informasikan keluhan yang dialami dan alamat lokasi Anda di Bekasi. Tim customer service kami siap melayani dan mengarahkan armada terdekat seketika.',
   },
   {
-    id: 5,
-    category: 'booking',
-    categoryLabel: 'Booking',
-    badgeClass: 'faq-cat-booking',
-    question: 'Berapa lama waktu yang dibutuhkan armada hingga tiba di lokasi?',
-    answer: 'Karena armada dan teknisi kami tersebar di berbagai posko kecamatan Kota Bekasi, rata-rata waktu tempuh armada ke lokasi adalah 15 hingga 30 menit setelah konfirmasi pemesanan, disesuaikan dengan kondisi jalan.',
-  },
-  {
     id: 6,
-    category: 'booking',
-    categoryLabel: 'Booking',
-    badgeClass: 'faq-cat-booking',
-    question: 'Apakah layanan tetap buka pada hari Minggu atau hari libur nasional?',
-    answer: 'Ya, layanan Mitra Bersih beroperasi penuh 24 Jam non-stop, 7 hari seminggu (24/7). Kami tetap melayani panggilan darurat kapan pun Anda membutuhkan, baik siang, malam, akhir pekan, maupun hari libur besar.',
+    category: 'prosedur',
+    serviceGroup: 'prosedur',
+    serviceGroupLabel: 'Prosedur',
+    categoryLabel: 'Prosedur',
+    badgeClass: 'faq-cat-prosedur',
+    question: 'Berapa lama waktu yang dibutuhkan armada hingga tiba di lokasi?',
+    answer: 'Karena armada dan teknisi kami tersebar di berbagai posko kecamatan Kota Bekasi, rata-rata waktu tempuh armada ke lokasi adalah 15 hingga 30 menit setelah konfirmasi pemesanan, disesuaikan dengan kondisi lalu lintas jalan.',
   },
   {
     id: 7,
-    category: 'coverage',
-    categoryLabel: 'Coverage',
-    badgeClass: 'faq-cat-coverage',
-    question: 'Wilayah mana saja yang dicakup oleh layanan Mitra Bersih?',
-    answer: 'Kami melayani seluruh 12 kecamatan di Kota Bekasi (Bantargebang, Bekasi Barat, Bekasi Selatan, Bekasi Timur, Bekasi Utara, Jatiasih, Jatisampurna, Medan Satria, Mustikajaya, Pondok Gede, Pondok Melati, Rawalumbu) hingga wilayah perbatasan Kabupaten Bekasi, Cibubur, dan Jakarta Timur.',
+    category: 'prosedur',
+    serviceGroup: 'prosedur',
+    serviceGroupLabel: 'Prosedur',
+    categoryLabel: 'Prosedur',
+    badgeClass: 'faq-cat-prosedur',
+    question: 'Bagaimana tahapan teknis penyedotan septic tank hingga tuntas?',
+    answer: 'Prosedur dimulai dari pembukaan manhole secara hati-hati, pengecekan volume dan ketebalan lumpur, pemasangan selang vakum spiral bertekanan tinggi, pengenceran kerak lumpur padat dengan water jetting, penyedotan tuntas hingga ke dasar tangki, dan pengujian kelancaran siraman kloset. Area kerja dibersihkan kembali tanpa sisa kotoran atau bau.',
   },
   {
     id: 8,
-    category: 'coverage',
-    categoryLabel: 'Coverage',
-    badgeClass: 'faq-cat-coverage',
-    question: 'Apakah bisa melayani rumah di dalam gang sempit yang tidak bisa dimasuki truk besar?',
-    answer: 'Bisa sekali! Kami memiliki armada truk berukuran kompak serta selang penyedot bertekanan tinggi ekstra panjang yang mampu menjangkau hingga ke dalam lorong gang sempit tanpa mengganggu ketertiban jalan umum.',
-  },
-  {
-    id: 9,
-    category: 'coverage',
-    categoryLabel: 'Coverage',
-    badgeClass: 'faq-cat-coverage',
+    category: 'prosedur',
+    serviceGroup: 'prosedur',
+    serviceGroupLabel: 'Prosedur',
+    categoryLabel: 'Prosedur',
+    badgeClass: 'faq-cat-prosedur',
     question: 'Apakah proses pelancaran saluran mampet harus membongkar pipa atau keramik?',
     answer: 'Tidak perlu bongkar. Kami menggunakan mesin pelancar drain cleaner modern (teknologi spiral fleksibel & vakum hidro) yang mampu menghancurkan lemak, kerak, atau sumbatan tanpa perlu merusak kloset ataupun membongkar lantai keramik Anda.',
   },
   {
-    id: 10,
-    category: 'coverage',
-    categoryLabel: 'Coverage',
-    badgeClass: 'faq-cat-coverage',
-    question: 'Apakah pengerjaan disertai dengan garansi?',
-    answer: 'Ya, semua pengerjaan sedot WC dan pelancaran saluran mampet dari Mitra Bersih dilengkapi dengan garansi kepuasan. Jika timbul kendala pada saluran yang sama setelah pengerjaan, tim kami siap melakukan pengecekan ulang hingga tuntas.',
+    id: 9,
+    category: 'prosedur',
+    serviceGroup: 'prosedur',
+    serviceGroupLabel: 'Prosedur',
+    categoryLabel: 'Prosedur',
+    badgeClass: 'faq-cat-prosedur',
+    question: 'Apakah bisa melayani rumah di dalam gang sempit yang tidak bisa dimasuki truk besar?',
+    answer: 'Bisa sekali! Kami memiliki armada truk berukuran kompak serta selang penyedot bertekanan tinggi ekstra panjang yang mampu menjangkau hingga ke dalam lorong gang sempit tanpa mengganggu ketertiban jalan umum.',
   },
+  {
+    id: 10,
+    category: 'prosedur',
+    serviceGroup: 'prosedur',
+    serviceGroupLabel: 'Prosedur',
+    categoryLabel: 'Prosedur',
+    badgeClass: 'faq-cat-prosedur',
+    question: 'Wilayah mana saja yang dicakup oleh layanan Mitra Bersih?',
+    answer: 'Kami melayani seluruh 12 kecamatan di Kota Bekasi (Bantargebang, Bekasi Barat, Bekasi Selatan, Bekasi Timur, Bekasi Utara, Jatiasih, Jatisampurna, Medan Satria, Mustikajaya, Pondok Gede, Pondok Melati, Rawalumbu) hingga wilayah perbatasan Kabupaten Bekasi, Cibubur, dan Jakarta Timur.',
+  },
+  {
+    id: 11,
+    category: 'prosedur',
+    serviceGroup: 'prosedur',
+    serviceGroupLabel: 'Prosedur',
+    categoryLabel: 'Prosedur',
+    badgeClass: 'faq-cat-prosedur',
+    question: 'Apakah layanan tetap beroperasi pada malam hari, hari Minggu, atau hari libur nasional?',
+    answer: 'Ya, layanan Mitra Bersih beroperasi penuh 24 Jam non-stop, 7 hari seminggu (24/7). Kami selalu menyiagakan teknisi piket untuk panggilan darurat kapan pun Anda membutuhkan, baik tengah malam, akhir pekan, maupun hari libur besar keagamaan.',
+  },
+
+  // --- KATEGORI: LEGALITAS ---
+  {
+    id: 12,
+    category: 'legalitas',
+    serviceGroup: 'legalitas',
+    serviceGroupLabel: 'Legalitas',
+    categoryLabel: 'Legalitas',
+    badgeClass: 'faq-cat-legalitas',
+    question: 'Apakah pengerjaan disertai dengan garansi resmi?',
+    answer: 'Ya, semua pengerjaan sedot WC dan pelancaran saluran mampet dari Mitra Bersih dilengkapi dengan garansi kepuasan resmi. Jika timbul kendala pada saluran yang sama dalam masa garansi setelah pengerjaan, tim teknisi kami siap melakukan pengecekan dan perbaikan ulang hingga tuntas tanpa biaya tambahan.',
+  },
+  {
+    id: 13,
+    category: 'legalitas',
+    serviceGroup: 'legalitas',
+    serviceGroupLabel: 'Legalitas',
+    categoryLabel: 'Legalitas',
+    badgeClass: 'faq-cat-legalitas',
+    question: 'Apakah Mitra Bersih memiliki izin resmi pembuangan limbah (AMDAL & Dinas Lingkungan Hidup)?',
+    answer: 'Tentu. Kami beroperasi secara legal dengan izin resmi dari Dinas Lingkungan Hidup (DLH) Kota Bekasi. Seluruh limbah tinja dan limbah lemak STP dibuang langsung ke fasilitas resmi Instalasi Pengolahan Lumpur Tinja (IPLT) Sumur Batu, Kota Bekasi, tanpa mencemari sungai, drainase, atau lingkungan warga sekitar.',
+  },
+  {
+    id: 14,
+    category: 'legalitas',
+    serviceGroup: 'legalitas',
+    serviceGroupLabel: 'Legalitas',
+    categoryLabel: 'Legalitas',
+    badgeClass: 'faq-cat-legalitas',
+    question: 'Apakah tersedia dokumen SPK, BAPP, Faktur, dan Kuitansi resmi untuk ruko, restoran, atau instansi?',
+    answer: 'Tersedia lengkap. Kami melayani kebutuhan administrasi korporat dan komersial dengan menerbitkan Surat Perintah Kerja (SPK), Berita Acara Penyelesaian Pekerjaan (BAPP), Faktur/Invoice resmi dengan NPWP perusahaan, serta kuitansi stempel basah resmi untuk keperluan audit dan pembukuan bisnis Anda.',
+  },
+];
+
+export interface SeniorTechnician {
+  id: number;
+  name: string;
+  role: string;
+  exp: string;
+  specialty: string;
+  avatar: string;
+  avatarBg: string;
+}
+
+export const seniorTechniciansList: SeniorTechnician[] = [
+  {
+    id: 1,
+    name: 'Pak Agus Prasetyo',
+    role: 'Kepala Koordinator Teknisi',
+    exp: '14 Tahun Pengalaman',
+    specialty: 'Sistem Vakum Septic Tank & Kuras Total',
+    avatar: 'A',
+    avatarBg: '#075E54',
+  },
+  {
+    id: 2,
+    name: 'Pak Bambang Irawan',
+    role: 'Senior Drain Cleaner Specialist',
+    exp: '11 Tahun Pengalaman',
+    specialty: 'Pelancaran Pipa Mampet Tanpa Bongkar',
+    avatar: 'B',
+    avatarBg: '#1E40AF',
+  },
+  {
+    id: 3,
+    name: 'Pak Dedi Mulyadi',
+    role: 'Konsultan Sanitasi & STP Limbah',
+    exp: '9 Tahun Pengalaman',
+    specialty: 'Bak Kontrol, Resapan & IPAL Komersial',
+    avatar: 'D',
+    avatarBg: '#B45309',
+  },
+];
+
+export interface ServiceZone {
+  id: string;
+  name: string;
+  shortName: string;
+  badge: string;
+  address: string;
+  query: string;
+  zoom: number;
+  eta: string;
+  armadaCount: string;
+  tel: string;
+  description: string;
+  districts: string[];
+}
+
+export const bekasiServiceZones: ServiceZone[] = [
+  {
+    id: 'pusat',
+    name: 'Pangkalan Pusat (Bekasi Selatan)',
+    shortName: 'Pusat & Selatan',
+    badge: 'Kantor & Pangkalan Utama',
+    address: 'Jl. Jend. Ahmad Yani No. 88, Marga Jaya, Bekasi Selatan, Kota Bekasi 17141',
+    query: 'Jl. Jenderal Ahmad Yani No.88, Marga Jaya, Kec. Bekasi Sel., Kota Bks, Jawa Barat 17141',
+    zoom: 15,
+    eta: '10 - 20 Menit',
+    armadaCount: '5 Unit Truk Tangki Siaga',
+    tel: '+6285715654183',
+    description: 'Pangkalan armada utama dan kantor koordinasi layanan 24 jam. Merespon cepat perkantoran, perumahan, ruko, dan pusat bisnis di koridor Ahmad Yani & Summarecon.',
+    districts: ['Bekasi Selatan', 'Bekasi Barat', 'Rawalumbu', 'Pekayon Jaya'],
+  },
+  {
+    id: 'timur',
+    name: 'Posko Wilayah Timur & Utara',
+    shortName: 'Timur & Utara',
+    badge: 'Pos Reaksi Cepat',
+    address: 'Jl. Ir. H. Juanda No. 120, Margahayu, Bekasi Timur, Kota Bekasi 17113',
+    query: 'Jl. Ir. H. Juanda, Bekasi Timur, Kota Bekasi, Jawa Barat',
+    zoom: 14,
+    eta: '15 - 25 Menit',
+    armadaCount: '3 Unit Truk Tangki Siaga',
+    tel: '+6285715654183',
+    description: 'Posko siaga untuk permukiman padat, perumahan Summarecon, Harapan Indah timur, kawasan industri, dan koridor Cut Mutia hingga Bulak Kapal.',
+    districts: ['Bekasi Timur', 'Bekasi Utara', 'Mustikajaya', 'Bantargebang'],
+  },
+  {
+    id: 'barat',
+    name: 'Posko Wilayah Barat & Kranji',
+    shortName: 'Barat & Kranji',
+    badge: 'Pos Perbatasan DKI',
+    address: 'Jl. Jend. Sudirman, Kranji / Bintara, Bekasi Barat, Kota Bekasi 17135',
+    query: 'Kranji, Bekasi Barat, Kota Bekasi, Jawa Barat',
+    zoom: 14,
+    eta: '12 - 22 Menit',
+    armadaCount: '2 Unit Truk Tangki Siaga',
+    tel: '+6285715654183',
+    description: 'Melayani area perbatasan Jakarta Timur, Kranji, Bintara, Pondok Kopi batas Bekasi, Harapan Baru, dan kawasan sentra industri Medan Satria.',
+    districts: ['Bekasi Barat', 'Medan Satria', 'Bintara', 'Jakasampurna'],
+  },
+  {
+    id: 'selatan',
+    name: 'Posko Jatiasih & Pondok Gede',
+    shortName: 'Jatiasih & Pd. Gede',
+    badge: 'Armada Selang Panjang 100m',
+    address: 'Jl. Raya Jatiasih No. 45 / Akses Gerbang Tol JORR, Jatiasih, Kota Bekasi 17423',
+    query: 'Jl. Raya Jatiasih, Jatiasih, Kota Bekasi, Jawa Barat',
+    zoom: 14,
+    eta: '15 - 25 Menit',
+    armadaCount: '2 Unit Tangki Vacuum Mini',
+    tel: '+6285715654183',
+    description: 'Armada khusus gang sempit & jalan perumahan klaster, dilengkapi selang spiral ekstra hingga 100 meter dan armada engkel mini siap masuk gang padat.',
+    districts: ['Jatiasih', 'Pondok Gede', 'Pondok Melati', 'Jatisampurna'],
+  },
+  {
+    id: 'all',
+    name: 'Seluruh Wilayah Kota Bekasi',
+    shortName: 'Seluruh Bekasi',
+    badge: 'Cakupan Penuh 12 Kecamatan',
+    address: 'Wilayah Layanan Resmi Kota Bekasi & Sekitarnya, Jawa Barat',
+    query: 'Kota Bekasi, Jawa Barat',
+    zoom: 12,
+    eta: '15 - 30 Menit Rata-rata',
+    armadaCount: '12 Unit Total Armada',
+    tel: '+6285715654183',
+    description: 'Jaringan operasional Mitra Bersih 24Jam mencakup seluruh 12 kecamatan di Kota Bekasi dan sekitarnya. Truk tangki terdekat akan diarahkan ke lokasi Anda secara otomatis.',
+    districts: [
+      'Bantargebang', 'Bekasi Barat', 'Bekasi Selatan', 'Bekasi Timur',
+      'Bekasi Utara', 'Jatiasih', 'Jatisampurna', 'Medan Satria',
+      'Mustikajaya', 'Pondok Gede', 'Pondok Melati', 'Rawalumbu'
+    ],
+  },
+];
+
+export interface BekasiDistrict {
+  id: string;
+  name: string;
+  zoneId: string;
+  eta: string;
+  highlight: string;
+}
+
+export const bekasiDistrictsList: BekasiDistrict[] = [
+  { id: 'bekasi-selatan', name: 'Bekasi Selatan', zoneId: 'pusat', eta: '10 - 15 Mnt', highlight: 'Pangkalan Pusat Ahmad Yani' },
+  { id: 'bekasi-barat', name: 'Bekasi Barat', zoneId: 'barat', eta: '12 - 18 Mnt', highlight: 'Kranji & Bintara Siaga' },
+  { id: 'bekasi-timur', name: 'Bekasi Timur', zoneId: 'timur', eta: '12 - 18 Mnt', highlight: 'Posko Juanda / Cut Mutia' },
+  { id: 'bekasi-utara', name: 'Bekasi Utara', zoneId: 'timur', eta: '15 - 22 Mnt', highlight: 'Summarecon & Kaliabang' },
+  { id: 'rawalumbu', name: 'Rawalumbu', zoneId: 'pusat', eta: '12 - 18 Mnt', highlight: 'Narogong & Kemang Pratama' },
+  { id: 'jatiasih', name: 'Jatiasih', zoneId: 'selatan', eta: '12 - 18 Mnt', highlight: 'Akses Tol JORR Siaga' },
+  { id: 'pondok-gede', name: 'Pondok Gede', zoneId: 'selatan', eta: '15 - 22 Mnt', highlight: 'Jatiwaringin & Hankam' },
+  { id: 'medan-satria', name: 'Medan Satria', zoneId: 'barat', eta: '15 - 20 Mnt', highlight: 'Harapan Indah & Industri' },
+  { id: 'mustikajaya', name: 'Mustikajaya', zoneId: 'timur', eta: '18 - 25 Mnt', highlight: 'Dukuh Zamrud & Grand Wisata' },
+  { id: 'pondok-melati', name: 'Pondok Melati', zoneId: 'selatan', eta: '15 - 25 Mnt', highlight: 'Jatimurni & Jatirahayu' },
+  { id: 'jatisampurna', name: 'Jatisampurna', zoneId: 'selatan', eta: '20 - 28 Mnt', highlight: 'Krangan & Transyogi' },
+  { id: 'bantargebang', name: 'Bantargebang', zoneId: 'timur', eta: '20 - 28 Mnt', highlight: 'Jalan Raya Narogong' },
 ];
 
 const galleryData: GalleryItem[] = [
@@ -606,7 +864,9 @@ export default function App() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [lightboxImg, setLightboxImg] = useState<{ src: string; title: string; desc: string } | null>(null);
   const [openFaqId, setOpenFaqId] = useState<number | null>(1);
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'pricing' | 'booking' | 'coverage'>('all');
+  const [selectedCategory, setSelectedCategory] = useState<'all' | 'harga' | 'prosedur' | 'legalitas'>('all');
+  const [isGroupedFaqView, setIsGroupedFaqView] = useState(true);
+  const [collapsedGroupKeys, setCollapsedGroupKeys] = useState<string[]>([]);
   const [selectedTipCategory, setSelectedTipCategory] = useState<'all' | 'septic' | 'pipe' | 'emergency'>('all');
   const [readingArticle, setReadingArticle] = useState<ArticleItem | null>(null);
   const [showOfferBanner, setShowOfferBanner] = useState(true);
@@ -622,6 +882,28 @@ export default function App() {
   const [showTimedNewsletterModal, setShowTimedNewsletterModal] = useState(false);
   const [timedNewsletterEmail, setTimedNewsletterEmail] = useState('');
   const [timedNewsletterStatus, setTimedNewsletterStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+
+  // Dedicated 'Ask a Pro' Form State
+  const [proQuestionName, setProQuestionName] = useState('');
+  const [proQuestionEmail, setProQuestionEmail] = useState('');
+  const [proQuestionPhone, setProQuestionPhone] = useState('');
+  const [proQuestionCategory, setProQuestionCategory] = useState('Septic Tank Penuh / Mampet Berulang');
+  const [proQuestionUrgency, setProQuestionUrgency] = useState<'normal' | 'important' | 'urgent'>('important');
+  const [proQuestionLocation, setProQuestionLocation] = useState('Bekasi Selatan');
+  const [proQuestionDetail, setProQuestionDetail] = useState('');
+  const [proQuestionStatus, setProQuestionStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [proQuestionError, setProQuestionError] = useState('');
+  const [proQuestionTicket, setProQuestionTicket] = useState<{
+    id: string;
+    name: string;
+    email: string;
+    category: string;
+    urgencyLabel: string;
+    location: string;
+    question: string;
+    submittedAt: string;
+    estimatedReplyTime: string;
+  } | null>(null);
 
   // Touch-Enabled Testimonial Carousel State
   const [carouselIndex, setCarouselIndex] = useState(0);
@@ -833,6 +1115,125 @@ export default function App() {
     }, 600);
   };
 
+  const handleSubmitProQuestion = (e: React.FormEvent) => {
+    e.preventDefault();
+    setProQuestionError('');
+
+    if (!proQuestionName.trim()) {
+      setProQuestionError('Mohon masukkan nama lengkap Anda.');
+      return;
+    }
+    if (!proQuestionEmail.trim() || !proQuestionEmail.includes('@') || !proQuestionEmail.includes('.')) {
+      setProQuestionError('Mohon masukkan alamat email yang valid untuk menerima jawaban teknisi.');
+      return;
+    }
+    if (proQuestionDetail.trim().length < 15) {
+      setProQuestionError('Mohon jelaskan pertanyaan atau kendala teknis Anda minimal 15 karakter agar teknisi dapat menganalisa dengan akurat.');
+      return;
+    }
+
+    setProQuestionStatus('loading');
+
+    setTimeout(() => {
+      const randomTicketNum = Math.floor(10000 + Math.random() * 90000);
+      const ticketId = `PRO-MB${randomTicketNum}`;
+      const replyTime = proQuestionUrgency === 'urgent' ? '< 60 Menit' : proQuestionUrgency === 'important' ? '< 2 Jam' : '< 4 Jam';
+      const urgencyLabel = proQuestionUrgency === 'urgent' ? 'Darurat (Prioritas Utama)' : proQuestionUrgency === 'important' ? 'Penting (1-2 Jam)' : 'Standar (2-4 Jam)';
+
+      const ticketData = {
+        id: ticketId,
+        name: proQuestionName.trim(),
+        email: proQuestionEmail.trim(),
+        category: proQuestionCategory,
+        urgencyLabel,
+        location: proQuestionLocation,
+        question: proQuestionDetail.trim(),
+        submittedAt: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+        estimatedReplyTime: replyTime,
+      };
+
+      setProQuestionTicket(ticketData);
+      setProQuestionStatus('success');
+
+      try {
+        const existing = JSON.parse(localStorage.getItem('mitra_pro_tickets') || '[]');
+        localStorage.setItem('mitra_pro_tickets', JSON.stringify([ticketData, ...existing.slice(0, 4)]));
+      } catch {
+        // storage fallback
+      }
+    }, 700);
+  };
+
+  const handleResetProQuestion = () => {
+    setProQuestionName('');
+    setProQuestionEmail('');
+    setProQuestionPhone('');
+    setProQuestionCategory('Septic Tank Penuh / Mampet Berulang');
+    setProQuestionUrgency('important');
+    setProQuestionDetail('');
+    setProQuestionStatus('idle');
+    setProQuestionError('');
+    setProQuestionTicket(null);
+  };
+
+  // Google Maps & Service Area Embed State
+  const [activeMapZoneId, setActiveMapZoneId] = useState<string>('pusat');
+  const [selectedDistrictName, setSelectedDistrictName] = useState<string | null>(null);
+  const [copiedOfficeAddress, setCopiedOfficeAddress] = useState(false);
+  const [districtSearchQuery, setDistrictSearchQuery] = useState('');
+
+  const currentZone = useMemo(() => {
+    return bekasiServiceZones.find((z) => z.id === activeMapZoneId) || bekasiServiceZones[0];
+  }, [activeMapZoneId]);
+
+  const activeMapQuery = useMemo(() => {
+    if (selectedDistrictName) {
+      return `Kecamatan ${selectedDistrictName}, Kota Bekasi, Jawa Barat`;
+    }
+    return currentZone.query;
+  }, [selectedDistrictName, currentZone]);
+
+  const activeMapZoom = useMemo(() => {
+    if (selectedDistrictName) return 14;
+    return currentZone.zoom;
+  }, [selectedDistrictName, currentZone]);
+
+  const activeMapTitle = useMemo(() => {
+    if (selectedDistrictName) {
+      const dist = bekasiDistrictsList.find((d) => d.name === selectedDistrictName);
+      return `Kecamatan ${selectedDistrictName} (Estimasi: ${dist ? dist.eta : '15 - 25 Menit'})`;
+    }
+    return currentZone.name;
+  }, [selectedDistrictName, currentZone]);
+
+  const activeMapAddress = useMemo(() => {
+    if (selectedDistrictName) {
+      const dist = bekasiDistrictsList.find((d) => d.name === selectedDistrictName);
+      return `Wilayah Layanan Kecamatan ${selectedDistrictName}, Kota Bekasi — Dilayani oleh ${currentZone.name} (${dist ? dist.highlight : 'Armada Terdekat'})`;
+    }
+    return currentZone.address;
+  }, [selectedDistrictName, currentZone]);
+
+  const handleCopyOfficeAddress = (textToCopy: string) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        setCopiedOfficeAddress(true);
+        setTimeout(() => setCopiedOfficeAddress(false), 2200);
+      });
+    } else {
+      setCopiedOfficeAddress(true);
+      setTimeout(() => setCopiedOfficeAddress(false), 2200);
+    }
+  };
+
+  const filteredDistricts = useMemo(() => {
+    if (!districtSearchQuery.trim()) return bekasiDistrictsList;
+    const q = districtSearchQuery.toLowerCase().trim();
+    return bekasiDistrictsList.filter(
+      (d) => d.name.toLowerCase().includes(q) || d.highlight.toLowerCase().includes(q)
+    );
+  }, [districtSearchQuery]);
+
   const highlightFaqMatch = (text: string, query: string) => {
     if (!query || !query.trim()) return text;
     const q = query.trim();
@@ -1032,11 +1433,12 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
     return () => clearTimeout(timer);
   }, []);
 
-  // Deep-link support for Articles (#artikel-1, #artikel-2, etc.)
+  // Deep-link support for Articles (#artikel-1, #artikel-2, etc.) and FAQ categories (#faq-prosedur, #faq-harga, #faq-legalitas)
   useEffect(() => {
-    const checkHashForArticle = () => {
-      if (window.location.hash.startsWith('#artikel-')) {
-        const idStr = window.location.hash.replace('#artikel-', '');
+    const checkHashForArticleAndFaq = () => {
+      const hash = window.location.hash;
+      if (hash.startsWith('#artikel-')) {
+        const idStr = hash.replace('#artikel-', '');
         const artId = parseInt(idStr, 10);
         if (!isNaN(artId)) {
           const matched = articlesData.find((a) => a.id === artId);
@@ -1044,12 +1446,27 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
             setReadingArticle(matched);
           }
         }
+      } else if (hash === '#faq-prosedur') {
+        setSelectedCategory('prosedur');
+        setTimeout(() => {
+          document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else if (hash === '#faq-harga') {
+        setSelectedCategory('harga');
+        setTimeout(() => {
+          document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else if (hash === '#faq-legalitas') {
+        setSelectedCategory('legalitas');
+        setTimeout(() => {
+          document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
       }
     };
 
-    checkHashForArticle();
-    window.addEventListener('hashchange', checkHashForArticle);
-    return () => window.removeEventListener('hashchange', checkHashForArticle);
+    checkHashForArticleAndFaq();
+    window.addEventListener('hashchange', checkHashForArticleAndFaq);
+    return () => window.removeEventListener('hashchange', checkHashForArticleAndFaq);
   }, []);
 
   // Dynamic meta title, description, OpenGraph, Twitter, and Schema.org tags for opened articles
@@ -2158,7 +2575,7 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
                   }}
                   className={`carousel-dot-btn ${idx === safeCarouselIndex ? 'active' : ''}`}
                   aria-label={`Buka slide halaman ${idx + 1}`}
-                />
+                ></button>
               ))}
             </div>
 
@@ -2241,39 +2658,275 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
         </div>
       </section>
 
-      {/* AREA LAYANAN */}
+      {/* AREA LAYANAN & GOOGLE MAPS EMBED */}
       <section className="area" id="kontak">
         <div className="container-custom">
           <div className="section-header">
-            <span className="section-badge">WILAYAH LAYANAN</span>
-            <h2 className="section-title">Area Layanan Kami</h2>
+            <span className="section-badge">
+              <i className="fas fa-map-marked-alt text-[#D97706] mr-1"></i> WILAYAH LAYANAN &amp; LOKASI KANTOR
+            </span>
+            <h2 className="section-title">Peta Area Layanan &amp; Pangkalan Armada di Bekasi</h2>
             <p className="section-subtitle">
-              Kami melayani seluruh wilayah Kota Bekasi dan sekitarnya dengan respon cepat.
+              Visualisasi interaktif Google Maps untuk jangkauan operasional 24 jam dan lokasi pangkalan armada kami di Kota Bekasi. Estimasi tiba 10–30 menit ke seluruh 12 kecamatan.
             </p>
           </div>
 
-          <div className="area-content">
-            <div className="area-illustration">
-              <i className="fas fa-map-marked-alt icon-big"></i>
-              <h3>Kota Bekasi & Sekitarnya</h3>
-              <p>Cakupan area layanan kami meliputi seluruh kecamatan di Kota Bekasi dengan waktu tempuh tercepat.</p>
+          <div className="maps-dashboard-container">
+            {/* Zone Switcher Bar */}
+            <div className="maps-zone-nav" role="tablist" aria-label="Pilih Pangkalan atau Wilayah Layanan">
+              {bekasiServiceZones.map((zone) => {
+                const isActive = activeMapZoneId === zone.id && !selectedDistrictName;
+                return (
+                  <button
+                    key={zone.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => {
+                      setActiveMapZoneId(zone.id);
+                      setSelectedDistrictName(null);
+                    }}
+                    className={`maps-zone-tab ${isActive ? 'active' : ''}`}
+                  >
+                    <i className={`fas ${zone.id === 'pusat' ? 'fa-building text-amber-500' : zone.id === 'all' ? 'fa-globe-asia text-emerald-500' : 'fa-truck-moving'}`}></i>
+                    <span>{zone.shortName}</span>
+                    <span className="maps-zone-tab-badge">{zone.badge}</span>
+                  </button>
+                );
+              })}
             </div>
 
-            <div className="area-list">
-              <div className="area-item"><i className="fas fa-check-circle"></i> Bantargebang</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Bekasi Barat</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Bekasi Selatan</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Bekasi Timur</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Bekasi Utara</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Jatiasih</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Jatisampurna</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Medan Satria</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Mustikajaya</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Pondok Gede</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Pondok Melati</div>
-              <div className="area-item"><i className="fas fa-check-circle"></i> Rawalumbu</div>
-              <div className="area-more">
-                <i className="fas fa-location-arrow"></i> Dan kecamatan sekitarnya
+            {/* 2-Column Main Layout: Maps Embed Card + District Coverage */}
+            <div className="maps-main-grid">
+              {/* Left Column: Google Maps Embed Card */}
+              <div className="maps-embed-card">
+                <div className="maps-embed-header">
+                  <div className="maps-header-info">
+                    <span className="maps-live-pill">
+                      <span className="maps-pulsing-dot"></span>
+                      Posko Siaga 24 Jam Non-Stop
+                    </span>
+                    <h3 className="maps-embed-title">
+                      <i className="fas fa-map-pin text-[#FFD60A]"></i>
+                      {activeMapTitle}
+                    </h3>
+                    <p className="maps-embed-address">
+                      {activeMapAddress}
+                    </p>
+                  </div>
+
+                  <div className="maps-header-actions">
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(activeMapQuery)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="maps-btn-action primary"
+                      title="Buka lokasi ini langsung di Google Maps"
+                    >
+                      <i className="fas fa-external-link-alt"></i>
+                      <span>Buka di Google Maps</span>
+                    </a>
+
+                    <a
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(activeMapQuery)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="maps-btn-action"
+                      title="Dapatkan petunjuk arah navigasi"
+                    >
+                      <i className="fas fa-directions"></i>
+                      <span>Petunjuk Rute</span>
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={() => handleCopyOfficeAddress(activeMapAddress)}
+                      className="maps-btn-action"
+                      title="Salin alamat lengkap pangkalan"
+                    >
+                      <i className={`fas ${copiedOfficeAddress ? 'fa-check text-green-400' : 'fa-copy'}`}></i>
+                      <span>{copiedOfficeAddress ? 'Tersalin!' : 'Salin Alamat'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Responsive Google Maps iFrame */}
+                <div className="maps-iframe-box">
+                  <iframe
+                    title="Google Maps Lokasi dan Wilayah Layanan Mitra Bersih 24Jam Kota Bekasi"
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(activeMapQuery)}&t=&z=${activeMapZoom}&ie=UTF8&iwloc=&output=embed`}
+                    className="maps-iframe"
+                    loading="lazy"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+
+                  {/* Floating Dispatch Beacon */}
+                  <div className="maps-floating-badge">
+                    <i className="fas fa-shield-alt"></i>
+                    <div>
+                      <strong>Armada Siaga: {currentZone.armadaCount}</strong>
+                      <span>Estimasi Respon Cepat: {selectedDistrictName ? (bekasiDistrictsList.find(d => d.name === selectedDistrictName)?.eta || '15 - 25 Menit') : currentZone.eta}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Map Embed Footer Bar */}
+                <div className="maps-embed-footer">
+                  <div className="maps-footer-metrics">
+                    <div className="maps-metric-item">
+                      <i className="fas fa-clock text-amber-500"></i>
+                      <span>Waktu Tempuh: <strong>{selectedDistrictName ? (bekasiDistrictsList.find(d => d.name === selectedDistrictName)?.eta || '15 - 25 Menit') : currentZone.eta}</strong></span>
+                    </div>
+                    <div className="maps-metric-item">
+                      <i className="fas fa-truck text-[#075E54]"></i>
+                      <span>Armada: <strong>{currentZone.armadaCount}</strong></span>
+                    </div>
+                    <div className="maps-metric-item">
+                      <i className="fas fa-check-double text-blue-600"></i>
+                      <span>Izin Resmi: <strong>DLH &amp; IPLT Sumur Batu</strong></span>
+                    </div>
+                  </div>
+
+                  <div className="maps-footer-cta-btns">
+                    <a
+                      href={`https://wa.me/6285715654183?text=${encodeURIComponent(
+                        `Halo Mitra Bersih 24Jam, saya ingin order layanan di area ${selectedDistrictName || currentZone.name}. Mohon info kedatangan armada terdekat.`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="maps-btn-wa-call"
+                    >
+                      <i className="fab fa-whatsapp"></i> Chat WhatsApp
+                    </a>
+                    <a
+                      href="tel:+6285715654183"
+                      className="maps-btn-phone-call"
+                    >
+                      <i className="fas fa-phone-alt"></i> Hubungi Posko
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: District Finder & Interactive ETA Explorer */}
+              <div className="maps-sidebar-card">
+                <div className="maps-sidebar-header">
+                  <span className="maps-sidebar-badge">
+                    <i className="fas fa-check-circle"></i> Cakupan 12 Kecamatan Kota Bekasi
+                  </span>
+                  <h3 className="maps-sidebar-title">Cek Lokasi &amp; Waktu Tiba Armada</h3>
+                  <p className="maps-sidebar-desc">
+                    Pilih kecamatan tempat tinggal atau tempat usaha Anda di bawah untuk memusatkan peta dan memeriksa estimasi kedatangan armada terdekat.
+                  </p>
+                </div>
+
+                {/* District Search Filter */}
+                <div className="maps-district-filter-box">
+                  <i className="fas fa-search maps-district-search-icon"></i>
+                  <input
+                    type="text"
+                    value={districtSearchQuery}
+                    onChange={(e) => setDistrictSearchQuery(e.target.value)}
+                    placeholder="Ketik nama kecamatan di Bekasi..."
+                    className="maps-district-input"
+                    aria-label="Cari kecamatan di Bekasi"
+                  />
+                </div>
+
+                {/* Selected District Focus Banner */}
+                {selectedDistrictName && (
+                  <div className="maps-selected-banner">
+                    <div>
+                      <strong>
+                        <i className="fas fa-map-marker-alt text-amber-600 mr-1"></i>
+                        Kecamatan {selectedDistrictName}
+                      </strong>
+                      <p>
+                        Armada tangki terdekat siap meluncur (Estimasi {bekasiDistrictsList.find(d => d.name === selectedDistrictName)?.eta || '15 - 25 Menit'}).
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedDistrictName(null);
+                        setActiveMapZoneId('pusat');
+                      }}
+                      className="maps-btn-reset-selection"
+                    >
+                      <i className="fas fa-undo-alt mr-1"></i> Pangkalan Pusat
+                    </button>
+                  </div>
+                )}
+
+                {/* 12-District Interactive Grid */}
+                <div className="maps-districts-grid">
+                  {filteredDistricts.map((district) => {
+                    const isDistrictSelected = selectedDistrictName === district.name;
+                    return (
+                      <button
+                        key={district.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedDistrictName(district.name);
+                          setActiveMapZoneId(district.zoneId);
+                        }}
+                        className={`maps-district-chip ${isDistrictSelected ? 'active' : ''}`}
+                      >
+                        <div className="maps-chip-top">
+                          <span className="maps-chip-name">{district.name}</span>
+                          <span className="maps-chip-eta">{district.eta}</span>
+                        </div>
+                        <span className="maps-chip-highlight">
+                          <i className="fas fa-location-arrow text-[10px] mr-1 opacity-70"></i>
+                          {district.highlight}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Emergency & Gang Sempit Note */}
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-900 flex items-start gap-2.5">
+                  <i className="fas fa-info-circle text-amber-600 mt-0.5 text-sm flex-shrink-0"></i>
+                  <div>
+                    <strong className="block font-bold mb-0.5">Rumah di Dalam Gang Sempit?</strong>
+                    Armada kami dilengkapi selang panjang fleksibel 50–100 meter. Bebas biaya tambahan selang untuk jarak normal!
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom 3 Feature Highlights */}
+            <div className="maps-features-row">
+              <div className="maps-feature-card">
+                <div className="maps-feature-icon">
+                  <i className="fas fa-route"></i>
+                </div>
+                <div className="maps-feature-info">
+                  <h4>Selang Panjang 50–100m</h4>
+                  <p>Truk parkir di jalan utama, selang spiral menjangkau septic tank hingga pelosok gang sempit tanpa mengganggu lalu lintas warga.</p>
+                </div>
+              </div>
+
+              <div className="maps-feature-card">
+                <div className="maps-feature-icon">
+                  <i className="fas fa-file-contract"></i>
+                </div>
+                <div className="maps-feature-info">
+                  <h4>Legalitas &amp; Izin Resmi IPLT</h4>
+                  <p>Limbah tinja dibuang secara resmi ke Instalasi Pengolahan Lumpur Tinja (IPLT) Sumur Batu dengan rekomendasi Dinas Lingkungan Hidup.</p>
+                </div>
+              </div>
+
+              <div className="maps-feature-card">
+                <div className="maps-feature-icon">
+                  <i className="fas fa-business-time"></i>
+                </div>
+                <div className="maps-feature-info">
+                  <h4>Siaga 24 Jam &amp; Hari Libur</h4>
+                  <p>Panggilan darurat tengah malam, hari Minggu, maupun hari libur nasional tetap dilayani dengan tarif transparan tanpa biaya siluman.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -2289,6 +2942,77 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
             <p className="section-subtitle">
               Jawaban lengkap seputar biaya transparan, proses pemesanan cepat 24 jam, dan jangkauan wilayah layanan kami di Kota Bekasi.
             </p>
+          </div>
+
+          {/* Quick Service Category Navigation Cards Deck */}
+          <div className="faq-category-nav-deck">
+            <div className="faq-category-nav-intro">
+              <span>
+                <i className="fas fa-layer-group text-[#D97706]"></i>
+                Pilih Kategori Layanan untuk Filter Langsung:
+              </span>
+              {selectedCategory !== 'all' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory('all');
+                    window.location.hash = '#faq';
+                  }}
+                  className="faq-nav-show-all-btn"
+                >
+                  <i className="fas fa-undo-alt"></i> Tampilkan Semua Kategori ({faqData.length})
+                </button>
+              )}
+            </div>
+
+            <div className="faq-category-nav-grid">
+              {serviceCategoriesList.map((cat) => {
+                const isSelected = selectedCategory === cat.key;
+                const count = faqData.filter((i) => i.category === cat.key).length;
+
+                return (
+                  <button
+                    key={cat.key}
+                    type="button"
+                    onClick={() => {
+                      if (isSelected) {
+                        setSelectedCategory('all');
+                        window.location.hash = '#faq';
+                      } else {
+                        setSelectedCategory(cat.key);
+                        window.location.hash = `#faq-${cat.key}`;
+                      }
+                      setCollapsedSearchIds([]);
+                      if (!faqSearchQuery.trim()) {
+                        const firstInCat = faqData.find((i) => i.category === cat.key);
+                        if (firstInCat) setOpenFaqId(firstInCat.id);
+                      }
+                    }}
+                    className={`faq-category-nav-card ${isSelected ? 'active' : ''}`}
+                    aria-pressed={isSelected}
+                  >
+                    <div className="faq-cat-card-header">
+                      <div className={`faq-cat-card-icon-wrap faq-cat-card-icon-${cat.key}`}>
+                        <i className={cat.icon}></i>
+                      </div>
+                      <span className="faq-cat-card-badge">
+                        {count} Tanya Jawab
+                      </span>
+                    </div>
+
+                    <h3 className="faq-cat-card-title">{cat.fullTitle}</h3>
+                    <p className="faq-cat-card-desc">{cat.desc}</p>
+
+                    <div className="faq-cat-card-footer">
+                      <span>
+                        {isSelected ? '✓ Kategori Sedang Aktif' : `Filter ${cat.label}`}
+                      </span>
+                      <i className={`fas ${isSelected ? 'fa-check-circle text-black' : 'fa-arrow-right text-[#075E54]'}`}></i>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* FAQ Search Input Field */}
@@ -2327,31 +3051,41 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
               )}
             </div>
 
-            {/* Quick Keyword Suggestion Tags */}
+            {/* Quick Keyword Suggestion Tags with Staggered Entrance */}
             <div className="faq-quick-tags">
               <span className="faq-quick-tag-label">
                 <i className="fas fa-bolt text-[#D97706]"></i> Populer:
               </span>
-              {['Tarif & Biaya', 'Garansi', 'Selang Panjang', 'Malam Hari', 'Gang Sempit', 'Metode Bayar'].map((tag) => {
-                const isActive = faqSearchQuery.toLowerCase() === tag.toLowerCase();
+              {[
+                { label: 'Prosedur Pesan', query: 'Prosedur' },
+                { label: 'Tarif & Biaya', query: 'Tarif' },
+                { label: 'Garansi Resmi', query: 'Garansi' },
+                { label: 'Selang Panjang', query: 'Selang Panjang' },
+                { label: 'Malam Hari', query: 'Malam Hari' },
+                { label: 'Gang Sempit', query: 'Gang Sempit' },
+                { label: 'Izin DLH & IPLT', query: 'DLH' },
+                { label: 'Metode Bayar', query: 'Metode Bayar' },
+              ].map((tag, idx) => {
+                const isActive = faqSearchQuery.toLowerCase() === tag.query.toLowerCase();
                 return (
                   <button
-                    key={tag}
+                    key={tag.query}
                     type="button"
+                    style={{ animationDelay: `${idx * 0.04}s` }}
                     className={`faq-quick-tag-btn ${isActive ? 'active' : ''}`}
                     onClick={() => {
-                      setFaqSearchQuery(isActive ? '' : tag);
+                      setFaqSearchQuery(isActive ? '' : tag.query);
                       setCollapsedSearchIds([]);
                     }}
                   >
-                    {tag}
+                    {tag.label}
                   </button>
                 );
               })}
             </div>
 
             {faqSearchQuery && (
-              <div className="faq-search-status">
+              <div key={faqSearchQuery} className="faq-search-status">
                 <span>
                   Menemukan <strong>{
                     faqData.filter((item) => {
@@ -2406,14 +3140,16 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
             )}
           </div>
 
-          {/* Category Tabs with Dynamic Real-time Counters & Print Action */}
+          {/* Category Tabs with Dynamic Real-time Counters, Grouping View Mode, & Print Action */}
           <div className="faq-toolbar-row">
             <div className="faq-categories">
               {([
-                { key: 'all' as const, label: 'Semua', icon: null },
-                { key: 'pricing' as const, label: 'Pricing', icon: 'fas fa-tags' },
-                { key: 'booking' as const, label: 'Booking', icon: 'fas fa-calendar-check' },
-                { key: 'coverage' as const, label: 'Coverage', icon: 'fas fa-map-marker-alt' },
+                { key: 'all' as const, label: 'Semua', icon: 'fas fa-th-large' },
+                ...serviceCategoriesList.map((c) => ({
+                  key: c.key,
+                  label: c.label,
+                  icon: c.icon,
+                })),
               ]).map((tab) => {
                 const q = faqSearchQuery.toLowerCase().trim();
                 const count = faqData.filter((item) => {
@@ -2429,6 +3165,7 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
                 return (
                   <button
                     key={tab.key}
+                    type="button"
                     className={`faq-cat-btn ${selectedCategory === tab.key ? 'active' : ''}`}
                     onClick={() => {
                       setSelectedCategory(tab.key);
@@ -2447,22 +3184,129 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
               })}
             </div>
 
-            {/* Print FAQ & Structured Data Button */}
-            <button
-              type="button"
-              onClick={() => {
-                setPrintScope(faqSearchQuery.trim() || selectedCategory !== 'all' ? 'current' : 'all');
-                setShowPrintFaqModal(true);
-              }}
-              className="faq-print-btn"
-              title="Cetak atau unduh versi print-friendly FAQ beserta referensi Schema.org JSON-LD"
-              aria-label="Cetak Dokumen FAQ"
-            >
-              <i className="fas fa-print"></i>
-              <span>Cetak Dokumen FAQ</span>
-              <span className="faq-print-badge-mini">PDF &amp; Schema</span>
-            </button>
+            <div className="faq-toolbar-actions">
+              {/* Dynamic Grouping View Toggle */}
+              <button
+                type="button"
+                onClick={() => setIsGroupedFaqView(!isGroupedFaqView)}
+                className={`faq-view-toggle-btn ${isGroupedFaqView ? 'active' : ''}`}
+                title={isGroupedFaqView ? 'Beralih ke mode daftar tunggal' : 'Beralih ke mode pengelompokan kategori layanan'}
+              >
+                <i className={`fas ${isGroupedFaqView ? 'fa-layer-group' : 'fa-list-ul'}`}></i>
+                <span>{isGroupedFaqView ? 'Mode Grup Kategori' : 'Mode Daftar Tunggal'}</span>
+              </button>
+
+              {/* Print FAQ & Structured Data Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setPrintScope(faqSearchQuery.trim() || selectedCategory !== 'all' ? 'current' : 'all');
+                  setShowPrintFaqModal(true);
+                }}
+                className="faq-print-btn"
+                title="Cetak atau unduh versi print-friendly FAQ beserta referensi Schema.org JSON-LD"
+                aria-label="Cetak Dokumen FAQ"
+              >
+                <i className="fas fa-print"></i>
+                <span>Cetak Dokumen FAQ</span>
+                <span className="faq-print-badge-mini">PDF &amp; Schema</span>
+              </button>
+            </div>
           </div>
+
+          {/* Quick Jump Bar when in Grouped View with All Categories */}
+          {isGroupedFaqView && selectedCategory === 'all' && (
+            <div className="faq-group-jump-bar">
+              <div className="faq-jump-pills-row">
+                <span className="faq-jump-label">
+                  <i className="fas fa-compass text-[#D97706]"></i> Lompat Cepat:
+                </span>
+                {serviceCategoriesList.map((cat) => {
+                  const q = faqSearchQuery.toLowerCase().trim();
+                  const count = faqData.filter((item) => {
+                    if (item.category !== cat.key) return false;
+                    if (!q) return true;
+                    return (
+                      item.question.toLowerCase().includes(q) ||
+                      item.answer.toLowerCase().includes(q) ||
+                      item.categoryLabel.toLowerCase().includes(q)
+                    );
+                  }).length;
+
+                  return (
+                    <button
+                      key={cat.key}
+                      type="button"
+                      onClick={() => {
+                        const el = document.getElementById(`faq-group-${cat.key}`);
+                        if (el) {
+                          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}
+                      className="faq-jump-pill"
+                    >
+                      <i className={`${cat.icon} text-xs`}></i>
+                      <span>{cat.label}</span>
+                      <span className="faq-jump-pill-count">{count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className="faq-group-mass-controls">
+                <button
+                  type="button"
+                  onClick={() => setCollapsedGroupKeys([])}
+                  className="faq-mass-toggle-btn"
+                  title="Buka seluruh grup kategori"
+                >
+                  <i className="fas fa-chevron-down mr-1"></i> Buka Semua Grup
+                </button>
+                <span className="text-gray-300">|</span>
+                <button
+                  type="button"
+                  onClick={() => setCollapsedGroupKeys(serviceCategoriesList.map((c) => c.key))}
+                  className="faq-mass-toggle-btn"
+                  title="Tutup seluruh grup kategori"
+                >
+                  <i className="fas fa-chevron-up mr-1"></i> Tutup Semua Grup
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Category Spotlight Banner when Single Category is Selected */}
+          {selectedCategory !== 'all' && (() => {
+            const currentCatMeta = serviceCategoriesList.find((c) => c.key === selectedCategory);
+            if (!currentCatMeta) return null;
+            return (
+              <div className="faq-category-banner">
+                <div className="faq-cat-banner-left">
+                  <div className="faq-cat-banner-icon">
+                    <i className={currentCatMeta.icon}></i>
+                  </div>
+                  <div className="faq-cat-banner-info">
+                    <h3>
+                      <span>{currentCatMeta.fullTitle}</span>
+                      <span className={`faq-category-badge ${currentCatMeta.badgeClass}`}>
+                        {currentCatMeta.label}
+                      </span>
+                    </h3>
+                    <p>{currentCatMeta.desc}</p>
+                  </div>
+                </div>
+                <div className="faq-cat-banner-actions">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCategory('all')}
+                    className="btn-see-all-cats"
+                  >
+                    <i className="fas fa-th-large"></i> Tampilkan Semua Kategori ({faqData.length})
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* FAQ Accordion List / Empty State */}
           {(() => {
@@ -2510,133 +3354,501 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
               );
             }
 
-            return (
-              <div className="faq-list">
-                {filteredList.map((item) => {
-                  // In real-time search mode, matching questions and answers are visible by default
-                  const isOpen = isSearching
-                    ? !collapsedSearchIds.includes(item.id)
-                    : openFaqId === item.id;
+            // Helper to render an individual FAQ card without invalid nested button
+            const renderFaqCard = (item: FAQItem) => {
+              const isOpen = isSearching
+                ? !collapsedSearchIds.includes(item.id)
+                : openFaqId === item.id;
 
-                  const handleToggleItem = () => {
-                    if (isSearching) {
-                      if (collapsedSearchIds.includes(item.id)) {
-                        setCollapsedSearchIds(collapsedSearchIds.filter((id) => id !== item.id));
-                      } else {
-                        setCollapsedSearchIds([...collapsedSearchIds, item.id]);
+              const handleToggleItem = () => {
+                if (isSearching) {
+                  if (collapsedSearchIds.includes(item.id)) {
+                    setCollapsedSearchIds(collapsedSearchIds.filter((id) => id !== item.id));
+                  } else {
+                    setCollapsedSearchIds([...collapsedSearchIds, item.id]);
+                  }
+                } else {
+                  setOpenFaqId(isOpen ? null : item.id);
+                }
+              };
+
+              return (
+                <div key={`${selectedCategory}-${faqSearchQuery}-${item.id}`} className={`faq-card ${isOpen ? 'open' : ''}`}>
+                  <div
+                    className="faq-header"
+                    role="button"
+                    tabIndex={0}
+                    onClick={handleToggleItem}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleToggleItem();
                       }
-                    } else {
-                      setOpenFaqId(isOpen ? null : item.id);
-                    }
-                  };
-
-                  return (
-                    <div key={item.id} className={`faq-card ${isOpen ? 'open' : ''}`}>
+                    }}
+                    aria-expanded={isOpen}
+                  >
+                    <div className="faq-header-left">
+                      <span className={`faq-category-badge ${item.badgeClass}`}>
+                        {highlightFaqMatch(item.categoryLabel, faqSearchQuery)}
+                      </span>
+                      <span className="faq-question-text">
+                        {highlightFaqMatch(item.question, faqSearchQuery)}
+                      </span>
+                    </div>
+                    <div className="faq-header-actions">
                       <button
-                        className="faq-header"
-                        onClick={handleToggleItem}
-                        aria-expanded={isOpen}
+                        type="button"
+                        className="faq-quick-share-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCopyFaq(item);
+                        }}
+                        title="Bagikan / Salin Pertanyaan & Jawaban"
+                        aria-label={`Bagikan ${item.question}`}
                       >
-                        <div className="faq-header-left">
-                          <span className={`faq-category-badge ${item.badgeClass}`}>
-                            {highlightFaqMatch(item.categoryLabel, faqSearchQuery)}
-                          </span>
-                          <span className="faq-question-text">
-                            {highlightFaqMatch(item.question, faqSearchQuery)}
-                          </span>
-                        </div>
-                        <div className="faq-header-actions">
+                        <i className={`fas ${copiedFaqId === item.id ? 'fa-check text-green-600' : 'fa-share-alt'}`}></i>
+                      </button>
+                      <div className="faq-toggle-icon">
+                        <i className="fas fa-chevron-down"></i>
+                      </div>
+                    </div>
+                  </div>
+                  {isOpen && (
+                    <div className="faq-body">
+                      <p>{highlightFaqMatch(item.answer, faqSearchQuery)}</p>
+
+                      {/* Share Options Bar */}
+                      <div className="faq-footer-actions">
+                        <span className="faq-share-label">
+                          <i className="fas fa-share-alt"></i> Bagikan Jawaban:
+                        </span>
+                        <div className="faq-share-btns">
                           <button
                             type="button"
-                            className="faq-quick-share-btn"
                             onClick={(e) => {
                               e.stopPropagation();
                               handleCopyFaq(item);
                             }}
-                            title="Bagikan / Salin Pertanyaan & Jawaban"
-                            aria-label={`Bagikan ${item.question}`}
+                            className={`faq-share-btn ${copiedFaqId === item.id ? 'copied' : ''}`}
+                            title="Salin Teks & Tautan Jawaban"
                           >
-                            <i className={`fas ${copiedFaqId === item.id ? 'fa-check text-green-600' : 'fa-share-alt'}`}></i>
+                            <i className={`fas ${copiedFaqId === item.id ? 'fa-check' : 'fa-link'}`}></i>
+                            <span>{copiedFaqId === item.id ? 'Tersalin!' : 'Salin Tautan'}</span>
                           </button>
-                          <div className="faq-toggle-icon">
-                            <i className="fas fa-chevron-down"></i>
-                          </div>
+
+                          <a
+                            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
+                              `*FAQ Mitra Bersih 24Jam*\n\n*Tanya:* ${item.question}\n\n*Jawab:* ${item.answer}\n\nInfo & Layanan 24 Jam: ${window.location.origin}#faq`
+                            )}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="faq-share-btn share-wa"
+                            onClick={(e) => e.stopPropagation()}
+                            title="Bagikan ke WhatsApp"
+                          >
+                            <i className="fab fa-whatsapp text-[#25D366]"></i>
+                            <span>WhatsApp</span>
+                          </a>
+
+                          <a
+                            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                              `${window.location.origin}#faq`
+                            )}&quote=${encodeURIComponent(`[FAQ Mitra Bersih 24Jam] ${item.question}`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="faq-share-btn share-fb"
+                            onClick={(e) => e.stopPropagation()}
+                            title="Bagikan ke Facebook"
+                          >
+                            <i className="fab fa-facebook-f text-[#1877F2]"></i>
+                            <span>Facebook</span>
+                          </a>
+
+                          <a
+                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                              `FAQ Mitra Bersih 24Jam: "${item.question}" - Jawaban lengkap:`
+                            )}&url=${encodeURIComponent(`${window.location.origin}#faq`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="faq-share-btn share-twitter"
+                            onClick={(e) => e.stopPropagation()}
+                            title="Bagikan ke X / Twitter"
+                          >
+                            <i className="fab fa-x-twitter"></i>
+                            <span>X</span>
+                          </a>
                         </div>
-                      </button>
-                      {isOpen && (
-                        <div className="faq-body">
-                          <p>{highlightFaqMatch(item.answer, faqSearchQuery)}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            };
 
-                          {/* Share Options Bar */}
-                          <div className="faq-footer-actions">
-                            <span className="faq-share-label">
-                              <i className="fas fa-share-alt"></i> Bagikan Jawaban:
-                            </span>
-                            <div className="faq-share-btns">
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCopyFaq(item);
-                                }}
-                                className={`faq-share-btn ${copiedFaqId === item.id ? 'copied' : ''}`}
-                                title="Salin Teks & Tautan Jawaban"
-                              >
-                                <i className={`fas ${copiedFaqId === item.id ? 'fa-check' : 'fa-link'}`}></i>
-                                <span>{copiedFaqId === item.id ? 'Tersalin!' : 'Salin Tautan'}</span>
-                              </button>
+            // DYNAMIC GROUPED VIEW: Render groups when grouped view is enabled and 'all' is selected
+            if (isGroupedFaqView && selectedCategory === 'all') {
+              return (
+                <div key={`${selectedCategory}-${faqSearchQuery}`} className="faq-groups-wrapper">
+                  {serviceCategoriesList.map((cat) => {
+                    const groupItems = filteredList.filter((item) => item.category === cat.key);
+                    if (groupItems.length === 0) return null;
+                    const isGroupCollapsed = collapsedGroupKeys.includes(cat.key);
 
-                              <a
-                                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                                  `*FAQ Mitra Bersih 24Jam*\n\n*Tanya:* ${item.question}\n\n*Jawab:* ${item.answer}\n\nInfo & Layanan 24 Jam: ${window.location.origin}#faq`
-                                )}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="faq-share-btn share-wa"
-                                onClick={(e) => e.stopPropagation()}
-                                title="Bagikan ke WhatsApp"
-                              >
-                                <i className="fab fa-whatsapp text-[#25D366]"></i>
-                                <span>WhatsApp</span>
-                              </a>
-
-                              <a
-                                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                                  `${window.location.origin}#faq`
-                                )}&quote=${encodeURIComponent(`[FAQ Mitra Bersih 24Jam] ${item.question}`)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="faq-share-btn share-fb"
-                                onClick={(e) => e.stopPropagation()}
-                                title="Bagikan ke Facebook"
-                              >
-                                <i className="fab fa-facebook-f text-[#1877F2]"></i>
-                                <span>Facebook</span>
-                              </a>
-
-                              <a
-                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                                  `FAQ Mitra Bersih 24Jam: "${item.question}" - Jawaban lengkap:`
-                                )}&url=${encodeURIComponent(`${window.location.origin}#faq`)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="faq-share-btn share-twitter"
-                                onClick={(e) => e.stopPropagation()}
-                                title="Bagikan ke X / Twitter"
-                              >
-                                <i className="fab fa-x-twitter"></i>
-                                <span>X</span>
-                              </a>
+                    return (
+                      <div
+                        id={`faq-group-${cat.key}`}
+                        key={cat.key}
+                        className={`faq-group-card ${isGroupCollapsed ? 'is-collapsed' : ''}`}
+                      >
+                        <div
+                          className="faq-group-header"
+                          onClick={() => {
+                            setCollapsedGroupKeys((prev) =>
+                              prev.includes(cat.key) ? prev.filter((k) => k !== cat.key) : [...prev, cat.key]
+                            );
+                          }}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              setCollapsedGroupKeys((prev) =>
+                                prev.includes(cat.key) ? prev.filter((k) => k !== cat.key) : [...prev, cat.key]
+                              );
+                            }
+                          }}
+                          aria-expanded={!isGroupCollapsed}
+                        >
+                          <div className="faq-group-meta-left">
+                            <div className="faq-group-icon-circle">
+                              <i className={cat.icon}></i>
+                            </div>
+                            <div className="faq-group-headings">
+                              <div className="faq-group-title-row">
+                                <h3 className="faq-group-title">{cat.fullTitle}</h3>
+                                <span className={`faq-category-badge ${cat.badgeClass}`}>{cat.label}</span>
+                                <span className="faq-group-count-badge">
+                                  {groupItems.length} Tanya Jawab
+                                </span>
+                              </div>
+                              <p className="faq-group-desc">{cat.desc}</p>
+                            </div>
+                          </div>
+                          <div className="faq-group-controls">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedCategory(cat.key);
+                              }}
+                              className="faq-group-filter-btn"
+                              title={`Saring hanya kategori ${cat.label}`}
+                            >
+                              <i className="fas fa-filter"></i>
+                              <span>Fokus {cat.label}</span>
+                            </button>
+                            <div className="faq-group-chevron-icon">
+                              <i className="fas fa-chevron-up"></i>
                             </div>
                           </div>
                         </div>
-                      )}
-                    </div>
-                  );
-                })}
+
+                        {!isGroupCollapsed && (
+                          <div className="faq-group-items-list">
+                            {groupItems.map(renderFaqCard)}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            }
+
+            // FLAT LIST VIEW: When grouped mode is off or a specific category filter is active
+            return (
+              <div key={`${selectedCategory}-${faqSearchQuery}`} className="faq-list">
+                {filteredList.map(renderFaqCard)}
               </div>
             );
           })()}
+
+          {/* DEDICATED 'ASK A PRO' (TANYA TEKNISI SENIOR) SECTION */}
+          <div id="ask-a-pro" className="ask-pro-section">
+            <div className="ask-pro-header">
+              <span className="ask-pro-badge">
+                <i className="fas fa-user-tie"></i> ASK A PRO &bull; KONSULTASI TEKNIS SENIOR
+              </span>
+              <h3 className="ask-pro-title">
+                Tanya Teknisi Senior Mitra Bersih
+              </h3>
+              <p className="ask-pro-subtitle">
+                Kendala saluran pipa atau septic tank Anda belum terjawab pada daftar FAQ di atas? Ajukan pertanyaan teknis spesifik langsung kepada tim teknisi senior kami. Dapatkan analisis teknis tertulis dan rekomendasi solusi yang dikirim langsung ke alamat email Anda secara gratis.
+              </p>
+
+              {/* Trust Indicators */}
+              <div className="ask-pro-trust-chips">
+                <span className="ask-pro-trust-chip">
+                  <i className="fas fa-bolt text-[#059669]"></i> Respon Email Cepat (&lt; 2 Jam Kerja)
+                </span>
+                <span className="ask-pro-trust-chip">
+                  <i className="fas fa-check-circle text-[#059669]"></i> 100% Gratis &amp; Tanpa Biaya Konsultasi
+                </span>
+                <span className="ask-pro-trust-chip">
+                  <i className="fas fa-award text-[#059669]"></i> Analisis Langsung oleh Teknisi 9–14 Thn Pengalaman
+                </span>
+              </div>
+
+              {/* Senior Technicians Showcase */}
+              <div className="ask-pro-experts-row">
+                {seniorTechniciansList.map((expert) => (
+                  <div key={expert.id} className="ask-pro-expert-card">
+                    <div
+                      className="ask-pro-expert-avatar"
+                      style={{ backgroundColor: expert.avatarBg }}
+                    >
+                      {expert.avatar}
+                    </div>
+                    <div className="ask-pro-expert-meta">
+                      <strong>{expert.name}</strong>
+                      <span>{expert.role}</span>
+                      <span className="expert-exp">
+                        <i className="fas fa-certificate text-amber-500 mr-1"></i>
+                        {expert.exp}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="ask-pro-body">
+              {proQuestionStatus === 'success' && proQuestionTicket ? (
+                <div className="ask-pro-success-card">
+                  <div className="ask-pro-success-icon">
+                    <i className="fas fa-check"></i>
+                  </div>
+                  <div className="ask-pro-ticket-pill">
+                    <i className="fas fa-ticket-alt text-amber-500"></i> No. Tiket: {proQuestionTicket.id}
+                  </div>
+                  <h4 className="ask-pro-success-title">Pertanyaan Berhasil Terkirim ke Teknisi Senior!</h4>
+                  <p className="ask-pro-success-desc">
+                    Terima kasih <strong>{proQuestionTicket.name}</strong>. Tim teknisi senior kami sedang meninjau pertanyaan teknis Anda dan akan mengirimkan analisa solusi tertulis ke <strong>{proQuestionTicket.email}</strong> dalam waktu estimasi <strong>{proQuestionTicket.estimatedReplyTime}</strong>.
+                  </p>
+
+                  <div className="ask-pro-summary-box">
+                    <div className="ask-pro-summary-row">
+                      <span className="ask-pro-summary-label">Topik Masalah:</span>
+                      <span className="ask-pro-summary-value">{proQuestionTicket.category}</span>
+                    </div>
+                    <div className="ask-pro-summary-row">
+                      <span className="ask-pro-summary-label">Wilayah Lokasi:</span>
+                      <span className="ask-pro-summary-value">{proQuestionTicket.location}</span>
+                    </div>
+                    <div className="ask-pro-summary-row">
+                      <span className="ask-pro-summary-label">Tingkat Urgensi:</span>
+                      <span className="ask-pro-summary-value">{proQuestionTicket.urgencyLabel}</span>
+                    </div>
+                    <div className="ask-pro-summary-row">
+                      <span className="ask-pro-summary-label">Waktu Pengajuan:</span>
+                      <span className="ask-pro-summary-value">Hari ini, {proQuestionTicket.submittedAt} WIB</span>
+                    </div>
+                    <div className="ask-pro-summary-row">
+                      <span className="ask-pro-summary-label">Pertanyaan Anda:</span>
+                      <span className="ask-pro-summary-value italic">"{proQuestionTicket.question}"</span>
+                    </div>
+                  </div>
+
+                  <div className="ask-pro-success-actions">
+                    <button
+                      type="button"
+                      onClick={handleResetProQuestion}
+                      className="btn-pro-another"
+                    >
+                      <i className="fas fa-edit mr-1.5"></i> Ajukan Pertanyaan Lain
+                    </button>
+                    <a
+                      href={`https://wa.me/6285715654183?text=Halo%20Mitra%20Bersih,%20saya%20sudah%20mengirim%20pertanyaan%20teknis%20No%20Tiket%20${proQuestionTicket.id}%20terkait:%20${encodeURIComponent(proQuestionTicket.category)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-pro-wa-backup"
+                    >
+                      <i className="fab fa-whatsapp"></i> Butuh Respon Darurat WhatsApp Sekarang
+                    </a>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmitProQuestion} className="ask-pro-form-element">
+                  {proQuestionError && (
+                    <div className="ask-pro-error-alert" role="alert">
+                      <i className="fas fa-exclamation-circle text-red-500"></i>
+                      <span>{proQuestionError}</span>
+                    </div>
+                  )}
+
+                  <div className="ask-pro-grid-2">
+                    <div className="ask-pro-field">
+                      <label className="ask-pro-label" htmlFor="pro-name">
+                        <span>Nama Lengkap <span className="req">*</span></span>
+                      </label>
+                      <input
+                        id="pro-name"
+                        type="text"
+                        className="ask-pro-input"
+                        placeholder="Contoh: Budi Santoso"
+                        value={proQuestionName}
+                        onChange={(e) => setProQuestionName(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="ask-pro-field">
+                      <label className="ask-pro-label" htmlFor="pro-email">
+                        <span>Alamat Email untuk Balasan <span className="req">*</span></span>
+                        <span className="hint">Jawaban dikirim ke sini</span>
+                      </label>
+                      <input
+                        id="pro-email"
+                        type="email"
+                        className="ask-pro-input"
+                        placeholder="nama@email.com"
+                        value={proQuestionEmail}
+                        onChange={(e) => setProQuestionEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="ask-pro-grid-2">
+                    <div className="ask-pro-field">
+                      <label className="ask-pro-label" htmlFor="pro-phone">
+                        <span>No. WhatsApp / Telepon</span>
+                        <span className="hint">(Opsional untuk verifikasi cepat)</span>
+                      </label>
+                      <input
+                        id="pro-phone"
+                        type="tel"
+                        className="ask-pro-input"
+                        placeholder="0812-XXXX-XXXX"
+                        value={proQuestionPhone}
+                        onChange={(e) => setProQuestionPhone(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="ask-pro-field">
+                      <label className="ask-pro-label" htmlFor="pro-location">
+                        <span>Kecamatan / Lokasi di Bekasi <span className="req">*</span></span>
+                      </label>
+                      <select
+                        id="pro-location"
+                        className="ask-pro-select"
+                        value={proQuestionLocation}
+                        onChange={(e) => setProQuestionLocation(e.target.value)}
+                      >
+                        <option value="Bekasi Barat">Bekasi Barat</option>
+                        <option value="Bekasi Selatan">Bekasi Selatan</option>
+                        <option value="Bekasi Timur">Bekasi Timur</option>
+                        <option value="Bekasi Utara">Bekasi Utara</option>
+                        <option value="Jatiasih">Jatiasih</option>
+                        <option value="Jatisampurna">Jatisampurna</option>
+                        <option value="Medan Satria">Medan Satria</option>
+                        <option value="Mustikajaya">Mustikajaya</option>
+                        <option value="Pondok Gede">Pondok Gede</option>
+                        <option value="Pondok Melati">Pondok Melati</option>
+                        <option value="Rawalumbu">Rawalumbu</option>
+                        <option value="Bantargebang">Bantargebang</option>
+                        <option value="Kabupaten Bekasi & Sekitarnya">Kabupaten Bekasi & Sekitarnya</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="ask-pro-field">
+                    <label className="ask-pro-label" htmlFor="pro-category">
+                      <span>Kategori Kendala Teknis <span className="req">*</span></span>
+                    </label>
+                    <select
+                      id="pro-category"
+                      className="ask-pro-select"
+                      value={proQuestionCategory}
+                      onChange={(e) => setProQuestionCategory(e.target.value)}
+                    >
+                      <option value="Septic Tank Penuh / Mampet Berulang">Septic Tank Penuh / Mampet Berulang</option>
+                      <option value="Saluran Pipa Air Kotor & Wastafel Mampet">Saluran Pipa Air Kotor & Wastafel Mampet</option>
+                      <option value="Masalah Bau Menyengat & Bak Kontrol Meluap">Masalah Bau Menyengat & Bak Kontrol Meluap</option>
+                      <option value="Instalasi Limbah STP / Grease Trap Komersial">Instalasi Limbah STP / Grease Trap Komersial</option>
+                      <option value="Konsultasi Teknis Khusus Lainnya">Konsultasi Teknis Khusus Lainnya</option>
+                    </select>
+                  </div>
+
+                  <div className="ask-pro-field">
+                    <label className="ask-pro-label">
+                      <span>Tingkat Urgensi Penanganan <span className="req">*</span></span>
+                    </label>
+                    <div className="ask-pro-urgency-row">
+                      <button
+                        type="button"
+                        onClick={() => setProQuestionUrgency('normal')}
+                        className={`ask-pro-urgency-btn ${proQuestionUrgency === 'normal' ? 'active' : ''}`}
+                      >
+                        <strong>Standar (Biasa)</strong>
+                        <span>Balasan email 2–4 jam</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setProQuestionUrgency('important')}
+                        className={`ask-pro-urgency-btn ${proQuestionUrgency === 'important' ? 'active' : ''}`}
+                      >
+                        <strong>Penting (Disarankan)</strong>
+                        <span>Balasan email 1–2 jam</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setProQuestionUrgency('urgent')}
+                        className={`ask-pro-urgency-btn ${proQuestionUrgency === 'urgent' ? 'active' : ''}`}
+                      >
+                        <strong>Darurat (Siaga)</strong>
+                        <span>Balasan email &lt; 60 menit</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="ask-pro-field">
+                    <label className="ask-pro-label" htmlFor="pro-detail">
+                      <span>Detail Pertanyaan / Gejala Kendala Teknis <span className="req">*</span></span>
+                      <span className="hint">{proQuestionDetail.length} karakter (min. 15)</span>
+                    </label>
+                    <textarea
+                      id="pro-detail"
+                      className="ask-pro-textarea"
+                      placeholder="Jelaskan kendala Anda selengkap mungkin (misal: Air kloset tidak kunjung surut saat disiram, sudah dicoba plunger tetapi tidak berhasil, lokasi rumah berada di dalam gang sempit, septic tank terakhir disedot 4 tahun lalu...)"
+                      value={proQuestionDetail}
+                      onChange={(e) => setProQuestionDetail(e.target.value)}
+                      rows={4}
+                      required
+                    ></textarea>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={proQuestionStatus === 'loading'}
+                    className="ask-pro-submit-btn"
+                  >
+                    {proQuestionStatus === 'loading' ? (
+                      <>
+                        <i className="fas fa-circle-notch fa-spin"></i>
+                        <span>Mengirim Pertanyaan ke Teknisi Senior...</span>
+                      </>
+                    ) : (
+                      <>
+                        <i className="fas fa-paper-plane"></i>
+                        <span>Kirim Pertanyaan ke Teknisi Senior (Dijawab via Email)</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
 
           {/* Quick Consultation CTA Banner */}
           <div className="faq-cta-banner">
