@@ -3734,6 +3734,400 @@ footer::before {
     border-radius: 50px;
 }
 
+/* === FAQ VISUAL FILTER CHIPS (HARGA, PROSEDUR, LEGALITAS, SEMUA) === */
+.faq-filter-chips-container {
+    max-width: 900px;
+    margin: 0 auto 28px auto;
+    width: 100%;
+}
+
+.faq-filter-chips-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.faq-chips-intro {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.faq-chips-title {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0F172A;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.faq-chips-hint {
+    font-size: 12px;
+    color: #64748B;
+    font-weight: 600;
+}
+
+.faq-chips-reset-btn {
+    background: #FEF3C7;
+    border: 1px solid #FCD34D;
+    color: #92400E;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.faq-chips-reset-btn:hover {
+    background: #FDE68A;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
+}
+
+.faq-filter-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    width: 100%;
+}
+
+@media (max-width: 860px) {
+    .faq-filter-chips-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .faq-filter-chips-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.faq-visual-chip {
+    background: #FFFFFF;
+    border: 1.5px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 12px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    user-select: none;
+    font-family: inherit;
+    text-align: left;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    width: 100%;
+}
+
+.faq-visual-chip:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+.faq-visual-chip:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Left part: Icon & Text */
+.faq-chip-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.faq-chip-icon-box {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: all 0.25s;
+}
+
+.faq-chip-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.faq-chip-label-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.faq-chip-label {
+    font-size: 14px;
+    font-weight: 800;
+    color: #0F172A;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.faq-chip-tagline {
+    font-size: 11px;
+    color: #64748B;
+    margin-top: 2px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Right part: Count Badge & Active Status */
+.faq-chip-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.faq-chip-count {
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 50px;
+    background: #F1F5F9;
+    color: #475569;
+    transition: all 0.2s;
+}
+
+.faq-chip-badge-status {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    display: none;
+}
+
+/* CATEGORY THEMES */
+
+/* 1. SEMUA (ALL) */
+.faq-chip-all .faq-chip-icon-box {
+    background: #F1F5F9;
+    color: #0F172A;
+}
+.faq-chip-all:hover {
+    border-color: #94A3B8;
+    background: #F8FAFC;
+}
+.faq-chip-all.active {
+    background: #0F172A;
+    border-color: #0F172A;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.22);
+    transform: translateY(-2px);
+}
+.faq-chip-all.active .faq-chip-icon-box {
+    background: #FFD60A;
+    color: #0F172A;
+}
+.faq-chip-all.active .faq-chip-label {
+    color: #FFFFFF;
+}
+.faq-chip-all.active .faq-chip-tagline {
+    color: #94A3B8;
+}
+.faq-chip-all.active .faq-chip-count {
+    background: #FFD60A;
+    color: #0F172A;
+}
+.faq-chip-all.active .faq-chip-badge-status {
+    display: inline-block;
+    background: rgba(255, 214, 10, 0.2);
+    color: #FFD60A;
+}
+
+/* 2. HARGA */
+.faq-chip-harga .faq-chip-icon-box {
+    background: #FEF3C7;
+    color: #D97706;
+}
+.faq-chip-harga:hover {
+    border-color: #FCD34D;
+    background: #FFFDF5;
+}
+.faq-chip-harga.active {
+    background: #FFFBEB;
+    border-color: #D97706;
+    box-shadow: 0 6px 18px rgba(217, 119, 6, 0.22);
+    transform: translateY(-2px);
+}
+.faq-chip-harga.active .faq-chip-icon-box {
+    background: #D97706;
+    color: #FFFFFF;
+}
+.faq-chip-harga.active .faq-chip-label {
+    color: #92400E;
+}
+.faq-chip-harga.active .faq-chip-tagline {
+    color: #B45309;
+}
+.faq-chip-harga.active .faq-chip-count {
+    background: #D97706;
+    color: #FFFFFF;
+}
+.faq-chip-harga.active .faq-chip-badge-status {
+    display: inline-block;
+    background: #FDE68A;
+    color: #92400E;
+}
+
+/* 3. PROSEDUR */
+.faq-chip-prosedur .faq-chip-icon-box {
+    background: #E0E7FF;
+    color: #4F46E5;
+}
+.faq-chip-prosedur:hover {
+    border-color: #A5B4FC;
+    background: #F8FAFF;
+}
+.faq-chip-prosedur.active {
+    background: #EEF2FF;
+    border-color: #4F46E5;
+    box-shadow: 0 6px 18px rgba(79, 70, 229, 0.22);
+    transform: translateY(-2px);
+}
+.faq-chip-prosedur.active .faq-chip-icon-box {
+    background: #4F46E5;
+    color: #FFFFFF;
+}
+.faq-chip-prosedur.active .faq-chip-label {
+    color: #312E81;
+}
+.faq-chip-prosedur.active .faq-chip-tagline {
+    color: #4338CA;
+}
+.faq-chip-prosedur.active .faq-chip-count {
+    background: #4F46E5;
+    color: #FFFFFF;
+}
+.faq-chip-prosedur.active .faq-chip-badge-status {
+    display: inline-block;
+    background: #C7D2FE;
+    color: #312E81;
+}
+
+/* 4. LEGALITAS */
+.faq-chip-legalitas .faq-chip-icon-box {
+    background: #D1FAE5;
+    color: #059669;
+}
+.faq-chip-legalitas:hover {
+    border-color: #6EE7B7;
+    background: #F6FEFA;
+}
+.faq-chip-legalitas.active {
+    background: #ECFDF5;
+    border-color: #059669;
+    box-shadow: 0 6px 18px rgba(5, 150, 105, 0.22);
+    transform: translateY(-2px);
+}
+.faq-chip-legalitas.active .faq-chip-icon-box {
+    background: #059669;
+    color: #FFFFFF;
+}
+.faq-chip-legalitas.active .faq-chip-label {
+    color: #064E3B;
+}
+.faq-chip-legalitas.active .faq-chip-tagline {
+    color: #047857;
+}
+.faq-chip-legalitas.active .faq-chip-count {
+    background: #059669;
+    color: #FFFFFF;
+}
+.faq-chip-legalitas.active .faq-chip-badge-status {
+    display: inline-block;
+    background: #A7F3D0;
+    color: #064E3B;
+}
+
+/* Active Category Feedback Banner */
+.faq-active-filter-strip {
+    max-width: 900px;
+    margin: 0 auto 20px auto;
+    background: #FFFBEB;
+    border: 1.5px solid #FDE68A;
+    border-radius: 14px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    animation: fadeIn 0.25s ease-out;
+}
+
+.faq-active-filter-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.faq-active-filter-label {
+    font-weight: 700;
+    color: #78350F;
+}
+
+.faq-active-filter-badge {
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 11.5px;
+    text-transform: uppercase;
+}
+
+.faq-active-filter-count {
+    color: #92400E;
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+.faq-active-filter-clear {
+    background: #FFFFFF;
+    border: 1px solid #D97706;
+    color: #92400E;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+}
+
+.faq-active-filter-clear:hover {
+    background: #FEF3C7;
+}
+
+/* Existing faq-cat-btn (Kept for compatibility) */
 .faq-cat-btn {
     background: var(--light-gray);
     color: var(--black);

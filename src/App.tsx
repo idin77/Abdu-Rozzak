@@ -3140,48 +3140,171 @@ Mohon info estimasi biaya dan waktu kedatangan armada terdekat ke lokasi saya. T
             )}
           </div>
 
-          {/* Category Tabs with Dynamic Real-time Counters, Grouping View Mode, & Print Action */}
-          <div className="faq-toolbar-row">
-            <div className="faq-categories">
-              {([
-                { key: 'all' as const, label: 'Semua', icon: 'fas fa-th-large' },
-                ...serviceCategoriesList.map((c) => ({
-                  key: c.key,
-                  label: c.label,
-                  icon: c.icon,
-                })),
-              ]).map((tab) => {
+          {/* Visual Set of Interactive Category Filter Chips (Harga, Prosedur, Legalitas, Semua) */}
+          <div className="faq-filter-chips-container">
+            <div className="faq-filter-chips-header">
+              <div className="faq-chips-intro">
+                <span className="faq-chips-title">
+                  <i className="fas fa-filter text-[#D97706]"></i> Filter Kategori FAQ:
+                </span>
+                <span className="faq-chips-hint">
+                  {selectedCategory === 'all'
+                    ? 'Pilih chip untuk menyaring atau klik chip aktif untuk melepaskan filter'
+                    : `Menampilkan topik ${selectedCategory.toUpperCase()} • Klik lagi chip untuk kembali ke Semua`}
+                </span>
+              </div>
+              {selectedCategory !== 'all' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory('all');
+                    setCollapsedSearchIds([]);
+                  }}
+                  className="faq-chips-reset-btn"
+                  title="Kembalikan ke semua kategori"
+                >
+                  <i className="fas fa-undo-alt"></i> Tampilkan Semua Kategori ({faqData.length})
+                </button>
+              )}
+            </div>
+
+            <div className="faq-filter-chips-grid" role="group" aria-label="Filter kategori tanya jawab">
+              {[
+                {
+                  key: 'all' as const,
+                  label: 'Semua Kategori',
+                  tagline: 'Seluruh Tanya Jawab',
+                  icon: 'fas fa-layer-group',
+                  theme: 'faq-chip-all',
+                },
+                {
+                  key: 'harga' as const,
+                  label: 'Harga',
+                  tagline: 'Biaya Pasti & Garansi',
+                  icon: 'fas fa-tags',
+                  theme: 'faq-chip-harga',
+                },
+                {
+                  key: 'prosedur' as const,
+                  label: 'Prosedur',
+                  tagline: 'Alur, Selang & Armada',
+                  icon: 'fas fa-clipboard-list',
+                  theme: 'faq-chip-prosedur',
+                },
+                {
+                  key: 'legalitas' as const,
+                  label: 'Legalitas',
+                  tagline: 'Izin Resmi DLH & IPLT',
+                  icon: 'fas fa-shield-alt',
+                  theme: 'faq-chip-legalitas',
+                },
+              ].map((chip) => {
+                const isSelected = selectedCategory === chip.key;
                 const q = faqSearchQuery.toLowerCase().trim();
                 const count = faqData.filter((item) => {
-                  const matchesCategory = tab.key === 'all' || item.category === tab.key;
+                  const matchesCategory = chip.key === 'all' || item.category === chip.key;
                   if (!q) return matchesCategory;
-                  return matchesCategory && (
-                    item.question.toLowerCase().includes(q) ||
-                    item.answer.toLowerCase().includes(q) ||
-                    item.categoryLabel.toLowerCase().includes(q)
+                  return (
+                    matchesCategory &&
+                    (item.question.toLowerCase().includes(q) ||
+                      item.answer.toLowerCase().includes(q) ||
+                      item.categoryLabel.toLowerCase().includes(q))
                   );
                 }).length;
 
                 return (
                   <button
-                    key={tab.key}
+                    key={chip.key}
                     type="button"
-                    className={`faq-cat-btn ${selectedCategory === tab.key ? 'active' : ''}`}
+                    role="button"
+                    aria-pressed={isSelected}
                     onClick={() => {
-                      setSelectedCategory(tab.key);
+                      if (selectedCategory === chip.key) {
+                        if (chip.key !== 'all') {
+                          setSelectedCategory('all');
+                        }
+                      } else {
+                        setSelectedCategory(chip.key);
+                      }
                       setCollapsedSearchIds([]);
                       if (!faqSearchQuery.trim()) {
-                        const firstInCat = faqData.find((i) => tab.key === 'all' || i.category === tab.key);
+                        const firstInCat = faqData.find((i) => chip.key === 'all' || i.category === chip.key);
                         if (firstInCat) setOpenFaqId(firstInCat.id);
                       }
                     }}
+                    className={`faq-visual-chip ${chip.theme} ${isSelected ? 'active' : ''}`}
+                    title={
+                      isSelected
+                        ? `Kategori ${chip.label} sedang aktif. Klik untuk melepas filter dan tampilkan semua.`
+                        : `Saring FAQ hanya untuk topik ${chip.label}`
+                    }
                   >
-                    {tab.icon && <i className={`${tab.icon} mr-1`}></i>}
-                    <span>{tab.label}</span>
-                    <span className="faq-cat-count">{count}</span>
+                    <div className="faq-chip-left">
+                      <div className="faq-chip-icon-box">
+                        <i className={chip.icon}></i>
+                      </div>
+                      <div className="faq-chip-text">
+                        <div className="faq-chip-label-row">
+                          <span className="faq-chip-label">{chip.label}</span>
+                          {isSelected && (
+                            <span className="faq-chip-badge-status">
+                              <i className="fas fa-check mr-0.5"></i> Aktif
+                            </span>
+                          )}
+                        </div>
+                        <span className="faq-chip-tagline">{chip.tagline}</span>
+                      </div>
+                    </div>
+
+                    <div className="faq-chip-right">
+                      <span className="faq-chip-count">{count}</span>
+                    </div>
                   </button>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Active Category Feedback Notification Strip */}
+          {selectedCategory !== 'all' && (
+            <div className="faq-active-filter-strip">
+              <div className="faq-active-filter-meta">
+                <span className="faq-active-filter-label">
+                  <i className="fas fa-filter text-amber-600"></i> Topik Sedang Difilter:
+                </span>
+                <span className={`faq-active-filter-badge faq-cat-${selectedCategory}`}>
+                  {selectedCategory === 'harga'
+                    ? 'Kategori: Harga & Transparansi Biaya'
+                    : selectedCategory === 'prosedur'
+                    ? 'Kategori: Prosedur Pemesanan & Pengerjaan'
+                    : 'Kategori: Legalitas, Izin DLH & IPLT'}
+                </span>
+                <span className="faq-active-filter-count">
+                  ({faqData.filter((i) => i.category === selectedCategory).length} pertanyaan relevan)
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategory('all');
+                  setCollapsedSearchIds([]);
+                }}
+                className="faq-active-filter-clear"
+                title="Tampilkan semua kategori pertanyaan"
+              >
+                <i className="fas fa-undo-alt"></i> Lepas Filter &amp; Tampilkan Semua
+              </button>
+            </div>
+          )}
+
+          {/* Category Actions Toolbar (Grouping View Mode & Print Action) */}
+          <div className="faq-toolbar-row mb-6">
+            <div className="flex items-center gap-2 text-xs font-semibold text-gray-500">
+              <i className="fas fa-eye text-[#075E54]"></i>
+              <span>Tampilan FAQ:</span>
+              <span className="font-bold text-[#111111]">
+                {isGroupedFaqView ? 'Mode Pengelompokan Kategori' : 'Mode Daftar Tunggal'}
+              </span>
             </div>
 
             <div className="faq-toolbar-actions">
